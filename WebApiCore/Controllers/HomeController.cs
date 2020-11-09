@@ -18,22 +18,44 @@ namespace WebApiCore.Controllers
             _logger = logger;
         }
 
+        // localhost:44361/Index
         public IActionResult Index()
         {
             return View();
         }
 
+        // localhost:44361/Home/Privacy
         public IActionResult Privacy()
         {
             return View();
         }
 
+        // localhost:44361/Home/Home
         public IActionResult Home()
         {
             return View();
         }
 
+        // localhost:44361/Home/Profile
         public IActionResult Profile()
+        {
+            return View();
+        }
+
+        // localhost:44361/Home/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // localhost:44361/Home/SignUp
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        // localhost:44361/Home/Template
+        public IActionResult Template()
         {
             return View();
         }
