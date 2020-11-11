@@ -24,6 +24,10 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //to be added
+            //added this part after setting up the registration
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,13 +49,21 @@ namespace WebApiCore
             app.UseRouting();
 
             app.UseAuthorization();
+            //registration
+            //to be added
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //to be added ... this is for URLs
+                endpoints.MapRazorPages();
             });
+
         }
+
     }
 }

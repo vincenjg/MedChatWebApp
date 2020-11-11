@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Models;
 
+
 namespace WebApiCore.Controllers
 {
+    //we add authorize to this controller so they cannot access the site without being authenticated first.
+    //so they will be redirected to the login page if they're not signed in.
+    //in login.cshtml.cs, an if statement is added so user is redirected to home page if they're authenticated
+
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
