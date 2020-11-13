@@ -37,32 +37,21 @@ namespace WebApiCore.Controllers
             return View();
         }
 
-        // localhost:44361/Home/Home
-        public IActionResult Home()
-        {
-            return View();
-        }
-
         // localhost:44361/Home/Profile
-        public IActionResult Profile()
+        public IActionResult UserProfile()
         {
             return View();
         }
 
-        // localhost:44361/Home/Login
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        // localhost:44361/Home/SignUp
-        public IActionResult SignUp()
-        {
-            return View();
-        }
 
         // localhost:44361/Home/Template
         public IActionResult Template()
+        {
+            return View();
+        }
+
+        // localhost:44361/Home/Status
+        public IActionResult Status()
         {
             return View();
         }

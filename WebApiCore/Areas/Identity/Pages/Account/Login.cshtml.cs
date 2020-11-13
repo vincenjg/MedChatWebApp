@@ -57,12 +57,10 @@ namespace WebApiCore.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            //user will be redirected if they're authenticated... means they won't be sent to the login page
-            //if(User.Identity.IsAuthenticated)
-            //{
-              //Response.Redirect("/Home");
+           // if(User.Identity.IsAuthenticated)
+           // {
+           //     Response.Redirect("/");
            // }
-
 
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -77,6 +75,7 @@ namespace WebApiCore.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
+
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

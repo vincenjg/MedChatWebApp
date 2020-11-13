@@ -15,8 +15,15 @@
                 <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
             </form>
         </li>
-    }
 
+        <li>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Status">Status</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </li>
+    }
 
     else
     {
@@ -27,6 +34,6 @@
             <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
         </li>
     }
-    <!-- we dont need this else statement because they're redirected to the login page, and it's just an extra tab at the top
-        there's a problem with google chrome, but it works on firefox-->
+
+
 </ul>
