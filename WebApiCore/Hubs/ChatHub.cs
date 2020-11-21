@@ -9,33 +9,65 @@ namespace WebApiCore.Hubs
 {
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        
+        public void NewMessage(string username, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            Clients.Others.SendAsync(username, message, DateTime.Now);
         }
 
-        public async Task SendMessageToGroup(string groupName, string message)
+
+
+
+
+        //added for group functionality
+        public async Task JoinGroup(string group)
         {
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId}: {message}");
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            //the context.connection id will have to be changed to actual user name
+            await Clients.Group(group).SendAsync("ReceiveMessage", $"{Context.User.Identity.Name} has joined the group {group}.");
         }
 
-        public async Task AddToGroup(string groupName)
+        public async Task SendMessageToAll(string message)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has joined the group {groupName}.");
+            //this doesn't send message to everyone. only those tho joined the private group.
+            await Clients.All.SendAsync("ReceiveMessage", $"{Context.User.Identity.Name}: {message}");
+            //following will allow option to send message to everyone.
+            //await Clients.All.SendAsync("ReceiveMessage", message);
         }
 
-        public async Task RemoveFromGroup(string groupName)
+        public async Task SendMessageToCaller(string user, string message)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-
-            await Clients.Group(groupName).SendAsync("Send", $"{Context.ConnectionId} has left the group {groupName}.");
+            await Clients.Caller.SendAsync("ReceiveMessage", message);
         }
 
-        public async Task SendPrivateMessage(string user, string message)
+        public async Task SendMessageToUser(string connectionId, string message)
+        {
+            await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
+            //await Clients.User(user).SendAsync("ReceiveMessage", message);
+        }
+
+        public async Task SendMessageToGroup(string group, string message)
+        {
+            //await Clients.Group(group).SendAsync("ReceiveMessage", message);
+            await Clients.Group(group).SendAsync("ReceiveMessage", $"{Context.User.Identity.Name}: {message}");
+        }
+
+        /*public async Task SendPrivateMessage(string user, string message)
         {
             await Clients.User(user).SendAsync("ReceiveMessage", message);
+        }*/
+
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.All.SendAsync("UserConnected", Context.User.Identity.Name);
+            await base.OnConnectedAsync();
         }
+
+        public override async Task OnDisconnectedAsync(Exception ex)
+        {
+            await Clients.All.SendAsync("UserDisconnected", Context.User.Identity.Name);
+            await base.OnDisconnectedAsync(ex);
+        }
+
     }
 }

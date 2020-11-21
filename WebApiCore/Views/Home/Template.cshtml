@@ -3,7 +3,7 @@
 *@
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Custom Template";
 }
 
 
@@ -58,7 +58,7 @@
 
                 case 'text':
 
-                    newdiv.innerHTML = "Field " + (counterText + 1) + " <input type='text' name='myInputs[]'>" + " <input type='text' name='myInputs[]'><br><br>";
+                    newdiv.innerHTML = "Field " + (counterText) + " <input type='text' name='myInputs[]'>" + " <input type='text' name='myInputs[]'><br><br>";
                     //newdiv.innerHTML = "Entry " +(counterText+1)+" <input type='text' name='myInputs[]'><br>";
                     counterText++;
 
@@ -66,21 +66,21 @@
 
                 case 'radio':
 
-                    newdiv.innerHTML = "Entry " + (counterRadioButton + 1) + " <input type='radio' name='myRadioButtons[]'>";
+                    newdiv.innerHTML = "Entry " + (counterRadioButton) + " <input type='radio' name='myRadioButtons[]'>";
                     counterRadioButton++;
 
                     break;
 
                 case 'checkbox':
 
-                    newdiv.innerHTML = "Entry " + (counterCheckBox + 1) + "<input type='text' name='myInputs[]'>" + " <input type='checkbox' name='myCheckBoxes[]'>";
+                    newdiv.innerHTML = "Entry " + (counterCheckBox) + "<input type='text' name='myInputs[]'>" + " <input type='checkbox' name='myCheckBoxes[]'>";
                     counterCheckBox++;
 
                     break;
 
                 case 'textarea':
 
-                    newdiv.innerHTML = "Entry " + (counterTextArea + 1) + " <textarea name='myTextAreas[]'>type here...</textarea>";
+                    newdiv.innerHTML = "Entry " + (counterTextArea) + " <textarea name='myTextAreas[]'>type here...</textarea>";
                     counterTextArea++;
 
                     break;

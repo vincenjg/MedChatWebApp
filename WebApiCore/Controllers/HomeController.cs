@@ -56,6 +56,12 @@ namespace WebApiCore.Controllers
             return View();
         }
 
+        // localhost:44361/Home/WaitingRoom
+        public IActionResult WaitingRoom()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

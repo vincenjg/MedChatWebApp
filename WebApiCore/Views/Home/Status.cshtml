@@ -1,35 +1,25 @@
-﻿@page
-<div class="container">
+﻿@{
+    ViewBag.Title = "Status Page";
+}
 
-    <div class="text-center">
-        <h1 class="display-4">Status</h1>
-        <p>Set your status here!</a>.</p>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-2">User</div>
-        <div class="col-4"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row">
-        <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
-    </div>
-    <div class="row">&nbsp;</div>
-    <div class="row">
-        <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
+<div>
+    <input type="button" id="joinGroup" value="Join Private Group" />
 </div>
-<div class="row">
-    <div class="col-12">
-        <hr />
-    </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <ul id="messagesList"></ul>
-    </div>
-</div>
+<br />
+
+<textarea name="message" id="message"></textarea>
+<br />
+<select id="group">
+    <option value="All">Everyone</option>
+    <option value="Myself">Myself</option>
+    <option value="PrivateGroup">Private Group</option>
+</select>
+<br />
+<br />
+<input type="button" id="sendButton" value="Send Message" />
+
+<div id="messages"></div>
+
+
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>

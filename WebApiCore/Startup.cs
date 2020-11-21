@@ -26,7 +26,7 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            
             //to be added
             //added this part after setting up the registration
             services.AddRazorPages();
@@ -67,7 +67,7 @@ namespace WebApiCore
                 //to be added ... this is for URLs
                 endpoints.MapRazorPages();
 
-                //for signalR
+                //for signalR - a route for the Hub that our clients will connect to (right before UseMvc):
                 endpoints.MapHub<ChatHub>("/chathub");
             });
 
