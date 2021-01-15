@@ -15,10 +15,6 @@ namespace WebApiCore.Hubs
             Clients.Others.SendAsync(username, message, DateTime.Now);
         }
 
-
-
-
-
         //added for group functionality
         public async Task JoinGroup(string group)
         {

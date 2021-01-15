@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
+using WebApiCore.Repository;
 
 namespace WebApiCore
 {
@@ -33,6 +34,9 @@ namespace WebApiCore
 
             //adding signal R
             services.AddSignalR();
+
+            // add data layer dependencies
+            services.AddDataAccess();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

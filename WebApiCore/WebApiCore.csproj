@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNet.SignalR.JS" Version="2.4.1" />
@@ -17,6 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
 </Project>
