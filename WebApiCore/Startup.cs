@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
 using WebApiCore.Repository;
+using WebApiCore.Utilities;
 
 namespace WebApiCore
 {
@@ -18,7 +19,6 @@ namespace WebApiCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -36,6 +36,8 @@ namespace WebApiCore
             services.AddSignalR();
 
             // add data layer dependencies
+            var dbConnection = Configuration.GetSection("ConnectionStrings");
+            services.Configure<ConnectionStrings>(dbConnection);
             services.AddDataAccess();
         }
 

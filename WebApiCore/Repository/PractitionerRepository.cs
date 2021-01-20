@@ -1,40 +1,73 @@
-﻿using System;
+﻿using Dapper;
+using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
 using WebApiCore.Repository.IRepository;
+using WebApiCore.Utilities;
 
 namespace WebApiCore.Repository
 {
     public class PractitionerRepository : IPractitionerRepository
     {
-        private readonly IDbConnection _connection;
+        private readonly ConnectionStrings _connectionStrings;
 
-        public PractitionerRepository(IDbConnection connection)
+        public PractitionerRepository(IOptions<ConnectionStrings> connectionStrings)
         {
-            _connection = connection;
+            _connectionStrings = connectionStrings.Value;
         }
 
-        public Task<int> Add(Practitioner entity)
+        public async Task<int> Add(Practitioner entity)
         {
-            throw new NotImplementedException();
+            var sql = @"INSERT INTO Practitioners (FirstName, LastName, Title, EmailAddress, TestPassword)
+                        VALUES (@FirstName, @LastName, @Title, @EmailAddress, @TestPassword)";
+
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
+            {
+                var affectedRows = await connection.ExecuteAsync(sql, entity);
+                return affectedRows;
+            }
         }
 
-        public Task<int> Delete(int id)
+        public async Task<int> Delete(int id)
         {
-            throw new NotImplementedException();
+            var sql = @"DELETLE * FROM Practitioners WHERE PractitionerID = @Id";
+
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
+            {
+                var affectedRows = await connection.ExecuteAsync(sql, new { Id = id });
+                return affectedRows;
+            }
         }
 
-        public Task<IEnumerable<Practitioner>> GetAllById(int id)
+        public async Task<IEnumerable<Practitioner>> GetAllById(int id)
         {
-            throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
+            {
+                var result = await connection.QueryAsync<Practitioner>("dbo.spGetAllPractitioners", new { PatientID = id },
+                     commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
         }
 
-        public Task<Practitioner> GetById(int id)
+        public async Task<Practitioner> GetById(int id)
         {
-            throw new NotImplementedException();
+            var sql = @"SELECT PractitionerID AS Id,
+                               FirstName,
+                               LastName,
+                               Title,
+                               EmailAddress,
+                               TestPassword
+                      FROM Practitioners WHERE PractitionerID = @Id";
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
+            {
+                var result = await connection.QueryAsync<Practitioner>(sql, new { Id = id });
+                return result.FirstOrDefault();
+            }
         }
 
         public Task<int> Update(Practitioner entity)

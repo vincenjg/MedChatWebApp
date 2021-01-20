@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Models;
-
+using WebApiCore.Repository.IRepository;
 
 namespace WebApiCore.Controllers
 {
@@ -19,10 +19,12 @@ namespace WebApiCore.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork _repositories;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork repositories)
         {
             _logger = logger;
+            _repositories = repositories;
         }
 
         // localhost:44361/Index
@@ -66,6 +68,13 @@ namespace WebApiCore.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpGet("patients/{id}")]
+        public ActionResult<Patient> Get(int id)
+        {
+            var patient = _repositories.Patients.GetById(id);
+            return patient.Result;
         }
     }
 }

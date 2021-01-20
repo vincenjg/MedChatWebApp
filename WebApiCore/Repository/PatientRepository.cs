@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,16 +8,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
 using WebApiCore.Repository.IRepository;
+using WebApiCore.Utilities;
 
 namespace WebApiCore.Repository
 {
     public class PatientRepository : IPatientRepository
     {
-        private readonly IDbConnection _connection;
+        private readonly ConnectionStrings _connectionStrings;
 
-        public PatientRepository(IDbConnection connection)
+        public PatientRepository(IOptions<ConnectionStrings> connectionStrings)
         {
-            _connection = connection;
+            _connectionStrings = connectionStrings.Value;
         }
 
         //TODO: modify patient object to allow for this, but since this isn't that important it can be put on the back burner.
@@ -28,9 +30,9 @@ namespace WebApiCore.Repository
         public async Task<int> Add(Patient entity)
         {
             var sql = @"INSERT INTO Patients (FirstName, LastName, TestPassword, EmailAddress, EpicID)
-                        VALUES (@FirstName, @LastName, @Password, @EmailAddress, @EpicId)";
+                        VALUES (@FirstName, @LastName, @TestPassword, @EmailAddress, @EpicId)";
             
-            using(var connection = new SqlConnection(_connection.ConnectionString))
+            using(var connection = new SqlConnection(_connectionStrings.TestConnection))
             {
                 var affectedRows = await connection.ExecuteAsync(sql, entity);
                 return affectedRows;
@@ -41,7 +43,7 @@ namespace WebApiCore.Repository
         {
             var sql = @"DELETE FROM Patients WHERE PatientID = @Id";
 
-            using (var connection = new SqlConnection(_connection.ConnectionString))
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
             {
                 var affectedRows = await connection.ExecuteAsync(sql, new { Id = id });
                 return affectedRows;
@@ -56,7 +58,7 @@ namespace WebApiCore.Repository
         /// <returns>A list of Patients associated with the practitioner (through the Patient_Practitioner_Relationships linking table).</returns>
         public async Task<IEnumerable<Patient>> GetAllById(int id)
         {
-            using (var connection = new SqlConnection(_connection.ConnectionString))
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection))
             {
                 var result = await connection.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = id },
                     commandType: CommandType.StoredProcedure);
@@ -71,10 +73,10 @@ namespace WebApiCore.Repository
                                   FirstName,
                                   LastName, 
                                   EmailAddress,
-                                  TestPassword AS Password
+                                  TestPassword
                          FROM Patients WHERE PatientID = @Id";
 
-            using (var connection = new SqlConnection(_connection.ConnectionString)) 
+            using (var connection = new SqlConnection(_connectionStrings.TestConnection)) 
             {
                 var result = await connection.QueryAsync<Patient>(sql, new { Id = id });
                 return result.FirstOrDefault();

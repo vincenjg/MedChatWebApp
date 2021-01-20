@@ -12,11 +12,11 @@ namespace WebApiCore.Models
         public string LastName { get; set; }
         public string Title { get; set; }
         public string EmailAddress { get; set; }
-        public string Password { get; set; }
-
-        public string GetFullName()
+        public string TestPassword { get; set; }
+        public bool IsOnline { get; set; }
+        public string FullName
         {
-            return FirstName + " " + LastName + " " + Title;
+            get => FirstName + " " + LastName + " " + Title;
         }
     }
 }
