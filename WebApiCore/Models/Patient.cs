@@ -7,7 +7,7 @@ namespace WebApiCore.Models
 {
     public class Patient
     {
-        public int Id { get; set; }
+        public int PatientId { get; set; }
         public string EpicId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

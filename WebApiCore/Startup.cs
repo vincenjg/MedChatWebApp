@@ -9,8 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
+using WebApiCore.Models;
 using WebApiCore.Repository;
 using WebApiCore.Utilities;
+using Microsoft.EntityFrameworkCore;
+using WebApiCore.Services;
 
 namespace WebApiCore
 {
@@ -27,7 +30,12 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
+
+            //data context connection setup with dapper
+            services.AddDbContext<WebAPICoreContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
+            services.AddScoped<IDapper, Dapperr>();
+
             //to be added
             //added this part after setting up the registration
             services.AddRazorPages();
