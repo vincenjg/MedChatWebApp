@@ -9,53 +9,63 @@ namespace WebApiCore.Hubs
 {
     public class ChatHub : Hub
     {
+        //TODO: handle what to do on disconnections.
+
+        // stores group name and connection mappings for each group.
+        public List<LobbyGroup> groups = new List<LobbyGroup>();
         
-        public void NewMessage(string username, string message)
+        public async Task CreateGroup(string groupName)
         {
-            Clients.Others.SendAsync(username, message, DateTime.Now);
+            // add new container for group connections to list.
+            LobbyGroup group = new LobbyGroup();
+            group.groupName = groupName;
+            groups.Add(group);
+
+            // create signalr group
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
         }
 
+        public async Task DestroyGroup(string groupName)
+        {
+            // remove group connections from list.
+            var groupToDestroy = groups.FirstOrDefault(g => g.groupName == groupName);
+            List<string> connectionsToRemove = (List<string>)groupToDestroy.connections.GetAllConnections();
 
+            // remove all patients from group
+            foreach (string connection in connectionsToRemove)
+            {
+                await Groups.RemoveFromGroupAsync(connection, groupName);
+            }
 
+            // remove practitioner from group.
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
 
+            // remove destroyed group information from groups list.
+            groups.Remove(groupToDestroy);
+        }
 
         //added for group functionality
-        public async Task JoinGroup(string group)
+        public async Task JoinGroup(int patientId, string groupName)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, group);
-            //the context.connection id will have to be changed to actual user name
-            await Clients.Group(group).SendAsync("ReceiveMessage", $"{Context.User.Identity.Name} has joined the group {group}.");
+            // add connection mapping to groups list.
+            var chosenGroup = groups.FirstOrDefault(g => g.groupName == groupName);
+            chosenGroup.connections.Add(patientId, groupName);
+
+            // add them to signalr group.
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Group(groupName).SendAsync("ReceiveMessage", $"There are now {chosenGroup.connections.Count} in the Lobby.");
         }
 
-        public async Task SendMessageToAll(string message)
+        public async Task LeaveGroup(int patientId, string groupName)
         {
-            //this doesn't send message to everyone. only those tho joined the private group.
-            await Clients.All.SendAsync("ReceiveMessage", $"{Context.User.Identity.Name}: {message}");
-            //following will allow option to send message to everyone.
-            //await Clients.All.SendAsync("ReceiveMessage", message);
-        }
+            // remove connection mapping from groups list.
+            var chosenGroup = groups.FirstOrDefault(g => g.groupName == groupName);
+            chosenGroup.connections.Remove(patientId, groupName);
 
-        public async Task SendMessageToCaller(string user, string message)
-        {
-            await Clients.Caller.SendAsync("ReceiveMessage", message);
+            // remove them from signalr group.
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Group(groupName).SendAsync("ReceiveMessage", $"There are now {chosenGroup.connections.Count} in the Lobby.");
         }
-
-        public async Task SendMessageToUser(string connectionId, string message)
-        {
-            await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
-            //await Clients.User(user).SendAsync("ReceiveMessage", message);
-        }
-
-        public async Task SendMessageToGroup(string group, string message)
-        {
-            //await Clients.Group(group).SendAsync("ReceiveMessage", message);
-            await Clients.Group(group).SendAsync("ReceiveMessage", $"{Context.User.Identity.Name}: {message}");
-        }
-
-        /*public async Task SendPrivateMessage(string user, string message)
-        {
-            await Clients.User(user).SendAsync("ReceiveMessage", message);
-        }*/
 
         public override async Task OnConnectedAsync()
         {
