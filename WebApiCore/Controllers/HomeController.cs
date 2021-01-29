@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApiCore.Models;
+using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
@@ -67,11 +68,12 @@ namespace WebApiCore.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-/*        [HttpGet("patients/{1}")]
-        public ActionResult<Patient> Get(int id)
-        {
-            var patient = _repositories.Patients.GetById(id);
-            return patient.Result;
-        }*/
+        /*        [HttpGet("patients/{1}")]
+                public ActionResult<Patient> Get(int id)
+                {
+                    var patient = _repositories.Patients.GetById(id);
+                    return patient.Result;
+                }*/
+
     }
 }
