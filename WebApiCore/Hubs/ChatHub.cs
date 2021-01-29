@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-
+using WebApiCore.Models;
 
 namespace WebApiCore.Hubs
 {
@@ -13,6 +13,12 @@ namespace WebApiCore.Hubs
 
         // stores group name and connection mappings for each group.
         public List<LobbyGroup> groups = new List<LobbyGroup>();
+
+        public async Task ChangeStatus(string groupName, int practitionerId, bool isOnline)
+        {
+            PractitionerStatus status = new PractitionerStatus { id = practitionerId, isOnline = isOnline };
+            await Clients.Group(groupName).SendAsync("AvailabilityChanged", status);
+        }
         
         public async Task CreateGroup(string groupName)
         {
