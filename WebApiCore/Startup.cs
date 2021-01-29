@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
+using WebApiCore.Models;
+using WebApiCore.Utilities;
+using Microsoft.EntityFrameworkCore;
+using WebApiCore.Services;
 
 namespace WebApiCore
 {
@@ -17,7 +21,6 @@ namespace WebApiCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -26,13 +29,23 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
+
+            //data context connection setup with dapper
+            services.AddDbContext<WebAPICoreContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
+            services.AddScoped<IDapper, Dapperr>();
+
             //to be added
             //added this part after setting up the registration
             services.AddRazorPages();
 
             //adding signal R
             services.AddSignalR();
+
+            // add data layer dependencies
+           /* var dbConnection = Configuration.GetSection("TestConnection");
+            services.Configure<ConnectionStrings>(dbConnection);
+            services.AddDataAccess();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
