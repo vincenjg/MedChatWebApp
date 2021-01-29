@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WebApiCore.Areas.Identity.Data
+
+@inject SignInManager<WebApiCoreUser> SignInManager
+@inject UserManager<WebApiCoreUser> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <li>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Status">Status</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </li>
+
+        <li>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Template">Template</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </li>
+
+        <li>
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="WaitingRoom">Waiting Room</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </li>
+
+        <li class="nav-item">
+            <form id="manage" class="form-inline" asp-area="Identity" asp-page="/Account/Manage/Account" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="account" type="submit" class="nav-link btn btn-link text-dark">Account</button>
+            </form>
+        </li>
+
+        <li class="nav-item">
+            <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+
+
+    }
+
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+
+
+</ul>

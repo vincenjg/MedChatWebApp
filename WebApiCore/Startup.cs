@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApiCore.Hubs;
 
 namespace WebApiCore
 {
@@ -16,6 +17,7 @@ namespace WebApiCore
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -24,6 +26,13 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            
+            //to be added
+            //added this part after setting up the registration
+            services.AddRazorPages();
+
+            //adding signal R
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,13 +54,25 @@ namespace WebApiCore
             app.UseRouting();
 
             app.UseAuthorization();
+            //registration
+            //to be added
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //to be added ... this is for URLs
+                endpoints.MapRazorPages();
+
+                //for signalR - a route for the Hub that our clients will connect to (right before UseMvc):
+                endpoints.MapHub<ChatHub>("/chathub");
             });
+
         }
+
+
     }
 }
