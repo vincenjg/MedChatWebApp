@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
 using WebApiCore.Models;
-using WebApiCore.Repository;
 using WebApiCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
@@ -44,9 +43,9 @@ namespace WebApiCore
             services.AddSignalR();
 
             // add data layer dependencies
-            var dbConnection = Configuration.GetSection("ConnectionStrings");
+           /* var dbConnection = Configuration.GetSection("TestConnection");
             services.Configure<ConnectionStrings>(dbConnection);
-            services.AddDataAccess();
+            services.AddDataAccess();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

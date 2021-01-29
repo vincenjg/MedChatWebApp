@@ -53,6 +53,9 @@ namespace WebApiCore.Hubs
             await Clients.User(user).SendAsync("ReceiveMessage", message);
         }*/
 
+        //connection mapping
+
+
         public override async Task OnConnectedAsync()
         {
             await Clients.All.SendAsync("UserConnected", Context.User.Identity.Name);
