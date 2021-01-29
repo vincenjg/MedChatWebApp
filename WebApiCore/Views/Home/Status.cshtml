@@ -3,23 +3,26 @@
 }
 
 <div>
-    <input type="button" id="joinGroup" value="Join Private Group" />
+    <input class="button" type="button" id="joinGroup" value="Join Private Group" />
 </div>
+
 <br />
 
+<div class="notIE">
+    <span class="fancyArrow"></span>
+    <select clas="select-css" id="group">
+        <option value="All">Everyone</option>
+        <option value="Myself">Myself</option>
+        <option value="PrivateGroup">Private Group</option>
+    </select>
+</div>
+<br /><br />
 <textarea name="message" id="message"></textarea>
 <br />
-<select id="group">
-    <option value="All">Everyone</option>
-    <option value="Myself">Myself</option>
-    <option value="PrivateGroup">Private Group</option>
-</select>
-<br />
-<br />
-<input type="button" id="sendButton" value="Send Message" />
+<input class="button" type="button" id="sendButton" value="Send Message" />
 
 <div id="messages"></div>
 
-
+<link href="~/css/site.css" rel="stylesheet" />
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>

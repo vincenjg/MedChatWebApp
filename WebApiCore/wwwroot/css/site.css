@@ -104,3 +104,65 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
+/* Button
+-------------------------------------------------- */
+.button {
+    display: inline-block;
+    padding: 15px 25px;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #008CBA;
+    border: none;
+    border-radius: 15px;
+}
+
+    .button:hover {
+        background-color: #1861ac
+    }
+
+    .button:active {
+        background-color: #1861ac;
+        transform: translateY(4px);
+    }
+
+
+.notIE {
+    position: relative;
+    display: inline-block;
+}
+
+/* Select Styling
+-------------------------------------------------- */
+.select-class {
+    display: inline-block;
+    height: 30px;
+    width: 150px;
+    outline: none;
+    color: #74646E;
+    border: 1px solid #C8BFC4;
+    border-radius: 4px;
+    box-shadow: inset 1px 1px 2px #DDD8DC;
+    background: #FFF;
+}
+/* Select arrow styling */
+
+.notIE .fancyArrow {
+    width: 23px;
+    height: 28px;
+    position: absolute;
+    display: inline-block;
+    top: 1px;
+    right: 3px;
+    pointer-events: none;
+}
+/*target Internet Explorer 9 and Internet Explorer 10:*/
+
+@media screen and (min-width: 0\0) {
+    .notIE .fancyArrow {
+        display: none;
+    }
+}
