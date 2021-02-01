@@ -9,6 +9,7 @@ using WebApiCore.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApiCore.Controllers
 {
@@ -16,21 +17,19 @@ namespace WebApiCore.Controllers
     [ApiController]
     public class APIController : ControllerBase
     {
-        private readonly IDapper _dapper;
+/*        private readonly IDapper _dapper;
         public APIController(IDapper dapper)
         {
             _dapper = dapper;
-        }
-        [HttpPost(nameof(Create))]
-        public async Task<int> Create(Patient data)
+        }*/
+
+        private string _connectionString;
+        
+        public APIController(IConfiguration configuration)
         {
-            var dbparams = new DynamicParameters();
-            dbparams.Add("Id", data.PatientId, DbType.Int32);
-            var result = await Task.FromResult(_dapper.Insert<int>("[dbo].[SP_Add_Article]"
-                , dbparams,
-                commandType: CommandType.StoredProcedure));
-            return result;
+            _connectionString = configuration.GetConnectionString("TestConnection");
         }
+
 
         [HttpGet(nameof(GetAllById))]
         public async Task<IEnumerable<Patient>> GetAllById(int id)
@@ -48,36 +47,51 @@ namespace WebApiCore.Controllers
         [HttpGet(nameof(GetById))]
         public async Task<Patient> GetById(int Id)
         {
-            var result = await Task.FromResult(_dapper.Get<Patient>($"SELECT PatientID AS Id, EpicId AS EpicId, FirstName, LastName, EmailAddress, TestPassword FROM Patients WHERE PatientID = {Id} ", null, commandType: CommandType.Text));
-            return result;
+            /*var result = await Task.FromResult(_dapper.Get<Patient>($"SELECT PatientID AS Id, EpicId AS EpicId, FirstName, LastName, EmailAddress, TestPassword FROM Patients WHERE PatientID = {Id} ", null, commandType: CommandType.Text));
+            return result;*/
+            string sql = @"SELECT PatientID AS Id, 
+                                  EpicId AS EpicId,
+                                  FirstName,
+                                  LastName, 
+                                  EmailAddress,
+                                  TestPassword
+                         FROM Patients WHERE PatientID = @Id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+
+                var result = await connection.QueryAsync<Patient>(sql, new { Id = Id });
+                List<Patient> patientList = result.ToList();
+                return result.FirstOrDefault();
+            }
 
         }
         [HttpDelete(nameof(Delete))]
-        public async Task<int> Delete(int Id)
+        public async Task<ActionResult<Patient>> Delete(int Id)
         {
-            var result = await Task.FromResult(_dapper.Execute($"Delete [Patients] Where Id = {Id}", null, commandType: CommandType.Text));
-            return result;
-        }
-        [HttpGet(nameof(Count))]
-        public Task<int> Count(int num)
-        {
-            var totalcount = Task.FromResult(_dapper.Get<int>($"select COUNT(*) from [Patients] WHERE Age like '%{num}%'", null,
-                    commandType: CommandType.Text));
-            return totalcount;
-        }
-        [HttpPatch(nameof(Update))]
-        public Task<int> Update(Patient data)
-        {
-            var dbPara = new DynamicParameters();
-            dbPara.Add("Id", data.PatientId);
-            dbPara.Add("FName", data.FirstName, DbType.String);
-            dbPara.Add("LName", data.LastName, DbType.String);
-            dbPara.Add("EpicId", data.EpicId, DbType.String);
 
-            var updateArticle = Task.FromResult(_dapper.Update<int>("[dbo].[SP_Update_Article]",
-                            dbPara,
-                            commandType: CommandType.StoredProcedure));
-            return updateArticle;
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                var sqlStatment = "DELETE FROM Patients WHERE PatientID = @Id";
+                await connection.ExecuteAsync(sqlStatment, new { Id = Id });
+            }
+            return Ok();
+
         }
+
+        [HttpPost(nameof(Add))]
+        public async Task<int> Add(Patient entity)
+        {
+            var sql = @"INSERT INTO Patients (FirstName, LastName, TestPassword, EmailAddress, EpicID)
+                        VALUES (@FirstName, @LastName, @TestPassword, @EmailAddress, @EpicId)";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var affectedRows = await connection.ExecuteAsync(sql, entity);
+                return affectedRows;
+            }
+        }
+
     }
 }
