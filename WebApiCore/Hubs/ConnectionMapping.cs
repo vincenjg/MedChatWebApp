@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApiCore.Hubs
 {
@@ -45,6 +43,16 @@ namespace WebApiCore.Hubs
             }
 
             return Enumerable.Empty<string>();
+        }
+
+        public IEnumerable<string> GetAllConnections()
+        {
+            if (_connections.Values != null) 
+            {
+                return (IEnumerable<string>)_connections.Values.ToList();
+            }
+            
+            return Enumerable.Empty<string>(); ;
         }
 
         public void Remove(T key, string connectionId)
