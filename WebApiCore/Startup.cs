@@ -13,6 +13,8 @@ using WebApiCore.Models;
 using WebApiCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiCore
 {
@@ -28,7 +30,7 @@ namespace WebApiCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
 
             //data context connection setup with dapper
             services.AddDbContext<WebAPICoreContext>(options =>

@@ -20,6 +20,7 @@ namespace WebApiCore.Controllers
         {
             _dapper = dapper;
         }
+
         [HttpPost(nameof(Create))]
         public async Task<int> Create(Practitioner data)
         {
@@ -31,14 +32,15 @@ namespace WebApiCore.Controllers
             return result;
         }
 
+        // This returns all patients associated with a practitioner.
         [HttpGet(nameof(GetAllById))]
-        public async Task<IEnumerable<Practitioner>> GetAllById(int id)
+        public async Task<IEnumerable<Patient>> GetAllById(int id)
         {
             using (var connection = new SqlConnection())
             {
                 connection.ConnectionString = "TestConnection";
 
-                var result = await connection.QueryAsync<Practitioner>("dbo.spGetAllPractitioners", new { PractitionerID = id },
+                var result = await connection.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = id },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
@@ -49,12 +51,7 @@ namespace WebApiCore.Controllers
         {
             var result = await Task.FromResult(_dapper.Get<Practitioner>($"SELECT PractitionerID AS Id, FirstName, LastName, EmailAddress, TestPassword FROM Practitioners WHERE PractitionerID = {Id} ", null, commandType: CommandType.Text));
             return result;
-
-            
         }
-
-    }
-
 
         [HttpDelete(nameof(Delete))]
         public async Task<int> Delete(int Id)
@@ -62,6 +59,7 @@ namespace WebApiCore.Controllers
             var result = await Task.FromResult(_dapper.Execute($"Delete [Practitioners] Where Id = {Id}", null, commandType: CommandType.Text));
             return result;
         }
+
         [HttpGet(nameof(Count))]
         public Task<int> Count(int num)
         {
@@ -69,6 +67,7 @@ namespace WebApiCore.Controllers
                     commandType: CommandType.Text));
             return totalcount;
         }
+
         [HttpPatch(nameof(Update))]
         public Task<int> Update(Practitioner data)
         {
