@@ -16,7 +16,7 @@ namespace WebApiCore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class APIController : ControllerBase
+    public class PatientController : ControllerBase
     {
  /*      private readonly IDapper _dapper;
         public APIController(IDapper dapper)
@@ -26,7 +26,7 @@ namespace WebApiCore.Controllers
 
         private string _connectionString;
         
-        public APIController(IConfiguration configuration)
+        public PatientController(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("TestConnection");
         }
@@ -85,17 +85,15 @@ namespace WebApiCore.Controllers
         }
 
         [HttpDelete(nameof(Delete))]
-        public async Task<ActionResult<Patient>> Delete(int Id)
+        public async Task<int> Delete(int Id)
         {
+            var sql = @"DELETE FROM Patients WHERE PatientID = @Id";
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                await connection.OpenAsync();
-                var sqlStatment = "DELETE FROM Patients WHERE PatientID = @Id";
-                await connection.ExecuteAsync(sqlStatment, new { Id = Id });
+                var affectedRows = await connection.ExecuteAsync(sql, new { Id = Id });
+                return affectedRows;
             }
-            return Ok();
-
         }
 
         [HttpPost(nameof(Add))]
