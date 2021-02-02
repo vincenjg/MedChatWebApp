@@ -13,8 +13,6 @@ using WebApiCore.Models;
 using WebApiCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiCore
 {

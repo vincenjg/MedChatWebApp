@@ -18,28 +18,10 @@ namespace WebApiCore.Controllers
     [ApiController]
     public class APIController : ControllerBase
     {
-/*        private readonly IDapper _dapper;
+ /*      private readonly IDapper _dapper;
         public APIController(IDapper dapper)
         {
             _dapper = dapper;
-        }
-
-        [HttpPost(nameof(GetUserInformation))]
-        public async Task<Patient> GetUserInformation([FromBody]JObject data)
-        {
-            var sql = @"SELECT PatientID, EpicID, FirstName, LastName, EmailAddress, TestPassword
-                        FROM Patients Where EmailAddress = @EmailAddress AND TestPassword = @Password";
-
-            var dbparams = new DynamicParameters();
-            dbparams.Add("EmailAddress", data["emailAddress"].ToString());
-            dbparams.Add("Password", data["password"].ToString());
-
-            var result = await Task.FromResult(_dapper.Get<Patient>(sql, dbparams, commandType: CommandType.Text));
-            return result;
-        }
-
-        [HttpPost(nameof(Create))]
-        public async Task<int> Create(Patient data)
         }*/
 
         private string _connectionString;
@@ -49,8 +31,24 @@ namespace WebApiCore.Controllers
             _connectionString = configuration.GetConnectionString("TestConnection");
         }
 
-        // This returns all practitioners associated with a patient.
+        [HttpPost(nameof(GetUserInformation))]
+        public async Task<Patient> GetUserInformation([FromBody] JObject data)
+        {
+            var sql = @"SELECT PatientID, EpicID, FirstName, LastName, EmailAddress, TestPassword
+                        FROM Patients Where EmailAddress = @EmailAddress AND TestPassword = @Password";
 
+            var dbparams = new DynamicParameters();
+            dbparams.Add("EmailAddress", data["emailAddress"].ToString());
+            dbparams.Add("Password", data["password"].ToString());
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                var result = await connection.QueryAsync<Patient>(sql, dbparams);
+                return result.FirstOrDefault();
+            }
+        }
+
+        // This returns all practitioners associated with a patient.
         [HttpGet(nameof(GetAllById))]
         public async Task<IEnumerable<Practitioner>> GetAllById(int id)
         {
@@ -81,7 +79,6 @@ namespace WebApiCore.Controllers
             {
 
                 var result = await connection.QueryAsync<Patient>(sql, new { Id = Id });
-                List<Patient> patientList = result.ToList();
                 return result.FirstOrDefault();
             }
 
