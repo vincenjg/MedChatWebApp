@@ -53,6 +53,7 @@ namespace WebApiCore.Controllers
             return result;
         }
 
+
         [HttpDelete(nameof(Delete))]
         public async Task<int> Delete(int Id)
         {
