@@ -18,7 +18,7 @@ namespace WebApiCore.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<WebApiCoreContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("TestConnection")));
+                        context.Configuration.GetConnectionString("WebApiCoreContextConnection")));
 
                 services.AddDefaultIdentity<WebApiCoreUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<WebApiCoreContext>();

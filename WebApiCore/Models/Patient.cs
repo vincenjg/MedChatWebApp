@@ -14,6 +14,8 @@ namespace WebApiCore.Models
         public string EmailAddress { get; set; }
         public string TestPassword { get; set; }
 
+        public virtual List<Appointment> Appointments { get; set; }
+
         public string GetFullName()
         {
             return FirstName + " " + LastName;
