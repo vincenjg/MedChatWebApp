@@ -1,14 +1,18 @@
 ﻿@model IEnumerable<WebApiCore.Models.Patient>
 
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PatientId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.EpicId)
             </th>
@@ -31,9 +35,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientId)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.EpicId)
             </td>
             <td>
@@ -49,9 +50,9 @@
                 @Html.DisplayFor(modelItem => item.TestPassword)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a asp-action="Edit" asp-route-id="@item.PatientId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PatientId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PatientId">Delete</a>
             </td>
         </tr>
 }
