@@ -13,6 +13,7 @@ using WebApiCore.Models;
 using WebApiCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
+using WebApiCore.Repository;
 
 namespace WebApiCore
 {
@@ -33,7 +34,9 @@ namespace WebApiCore
             //data context connection setup with dapper
             services.AddDbContext<WebAPICoreContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
-            services.AddScoped<IDapper, Dapperr>();
+            services.AddScoped<IPatientRepository, PatientRepository>();
+            
+            //services.AddScoped<IDapper, Dapperr>();
 
             //to be added
             //added this part after setting up the registration

@@ -16,7 +16,7 @@ namespace WebApiCore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PatientController : ControllerBase
+    public class PatientController : Controller
     {
  /*      private readonly IDapper _dapper;
         public APIController(IDapper dapper)
@@ -79,6 +79,7 @@ namespace WebApiCore.Controllers
             {
 
                 var result = await connection.QueryAsync<Patient>(sql, new { Id = Id });
+                //return connection.Query<Patient>(sql).ToList();
                 return result.FirstOrDefault();
             }
 
