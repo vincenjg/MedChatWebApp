@@ -14,14 +14,21 @@ using WebApiCore.Utilities;
 using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
 using WebApiCore.Repository;
+using static System.Environment;
 
 namespace WebApiCore
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -43,12 +50,12 @@ namespace WebApiCore
             services.AddRazorPages();
 
             //adding signal R
-            services.AddSignalR();
+            services.AddSignalR(Options => Options.EnableDetailedErrors = true);
 
             // add data layer dependencies
-           /* var dbConnection = Configuration.GetSection("TestConnection");
-            services.Configure<ConnectionStrings>(dbConnection);
-            services.AddDataAccess();*/
+            /* var dbConnection = Configuration.GetSection("TestConnection");
+             services.Configure<ConnectionStrings>(dbConnection);
+             services.AddDataAccess();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
