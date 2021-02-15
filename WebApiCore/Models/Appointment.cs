@@ -10,7 +10,12 @@ namespace WebApiCore.Models
     {
         public int Id { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{yyyy-MMM-dd HH:mm:ss.fff}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
+
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0yyyy-MMM-dd HH:mm:ss.fff}", ApplyFormatInEditMode = true)]
         public DateTime EndTime { get; set; }
         public string AppointmentReason { get; set; }
         public string AppointmentInstructions { get; set; }

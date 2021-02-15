@@ -42,6 +42,8 @@ namespace WebApiCore
             services.AddDbContext<WebAPICoreContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
             services.AddScoped<IPatientRepository, PatientRepository>();
+            services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             
             //services.AddScoped<IDapper, Dapperr>();
 

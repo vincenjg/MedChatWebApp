@@ -30,8 +30,11 @@ namespace WebApiCore.Controllers
             Patient patient = await _patients.Get(email, password);
             return patient;
         }
+        //using nameof for consistency
 
-        [HttpGet("Get/{id}")]
+        //[HttpGet("Get/{id}")]
+        //https://localhost:44361/api/Patient/Get/1       
+        [HttpGet(nameof(GetById))]
         public async Task<Patient> GetById(int id)
         {
             Patient patient = await _patients.Get(id);
@@ -39,7 +42,11 @@ namespace WebApiCore.Controllers
         }
 
         // This returns all practitioners associated with a patient.
-        [HttpGet("GetAllPractitioners")]
+        //https://localhost:44361/api/Patient/GetAllPractitioners/2
+        //[HttpGet("GetAllPractitioners/{id}")]
+        
+        //https://localhost:44361/api/Patient/GetAllById?id=2
+        [HttpGet(nameof(GetAllById))]        
         public async Task<IEnumerable<Practitioner>> GetAllById(int id)
         {
             List<Practitioner> practitioners = (List<Practitioner>)await _practitioners.GetAllById(id);
