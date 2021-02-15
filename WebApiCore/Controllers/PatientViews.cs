@@ -6,11 +6,11 @@ using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
-    public class PatientsController : Controller
+    public class PatientViews : Controller
     {
         private readonly IPatientRepository _patients;
 
-        public PatientsController(IPatientRepository patients)
+        public PatientViews(IPatientRepository patients)
         {
             _patients = patients;
         }
