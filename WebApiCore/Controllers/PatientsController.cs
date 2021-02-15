@@ -138,20 +138,6 @@ namespace WebApiCore.Controllers
             return View(patient);*/
         }
 
-        /*// POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }*/
-
-        /*private bool PatientExists(int id)
-        {
-            return _context.Patients.Any(e => e.PatientId == id);
-        }*/
+        
     }
 }
