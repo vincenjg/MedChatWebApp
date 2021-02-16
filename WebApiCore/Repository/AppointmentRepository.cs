@@ -54,7 +54,7 @@ namespace WebApiCore.Repository
         {
             var sql = @"Insert INTO Appointments (StartTime, EndTime, AppointmentReason, AppointmentInstructions, PatientID, PractitionerID)
                         VALUES(@StartTime, @EndTime, @AppointmentReason, @AppointmentInstructions, @PatientID, @PractitionerID)";
-            using(IDbConnection conn = Connection)
+            using (IDbConnection conn = Connection)
             {
                 var affectedRows = await conn.ExecuteAsync(sql, appointment);
                 return affectedRows;
@@ -81,7 +81,7 @@ namespace WebApiCore.Repository
                         AppointmentInstructions = @AppointmentInstructions,
                         PatientID = @PatientID
                         PractitionerID = @PractitionerID";
-            using(IDbConnection conn = Connection)
+            using (IDbConnection conn = Connection)
             {
                 var affectedRows = await conn.ExecuteAsync(sql, appointment);
                 return affectedRows;
@@ -89,12 +89,23 @@ namespace WebApiCore.Repository
         }
         //get all appointments based on practitioner
         //create stored procedure spGetALlAppointments to retreive all appointments under a practitioner?
-        public async Task<IEnumerable<Appointment>> GetAllById(int practitionerId)
+        public async Task<IEnumerable<Appointment>> GetAllByPractitionerId(int practitionerId)
         {
             using (IDbConnection conn = Connection)
             {
                 var result = await conn.QueryAsync<Appointment>("dbo.spGetAllAppointments", new { PractitionerId = practitionerId },
                    commandType: CommandType.StoredProcedure);
+                return result.ToList();
+            }
+        }
+
+
+        public async Task<IEnumerable<Appointment>> GetAllByPatientId(int patientId)
+        {
+            using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllAppointments", new { PractitionerId = patientId },
+                    commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }

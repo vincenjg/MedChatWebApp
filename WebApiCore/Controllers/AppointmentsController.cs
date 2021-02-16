@@ -29,12 +29,12 @@ namespace WebApiCore.Controllers
             return appointment;
         }
 
-        [HttpGet(nameof(GetAllById))]
+/*        [HttpGet(nameof(GetAllById))]
         public async Task<IEnumerable<Appointment>> GetAllById(int id)
         {
             List<Appointment> appointments = (List<Appointment>)await _appointments.GetAllById(id);
             return appointments;
-        }
+        }*/
 
         [HttpDelete(nameof(Delete))]
         public async Task<int> Delete(int id)
