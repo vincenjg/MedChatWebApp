@@ -8,13 +8,19 @@ namespace WebApiCore.Repository
 {
     public interface IPatientRepository
     {
-        // find method based on id. 
-        Patient Find(int id);
+        Task<Patient> Get(int id);
 
-        List<Patient> GetAll();
-        Patient Add(Patient patient);
+        Task<Patient> Get(string email, string password);
 
-        Patient Update(Patient patient);
-        void Remove(int id);
+        Task<IEnumerable<Patient>> GetAllById(int practitionerId);
+
+        Task<IEnumerable<Patient>> GetAll();
+
+        Task<int> Add(Patient patient);
+
+        Task<int> Update(Patient patient);
+
+        Task<int> Delete(int id);
+
     }
 }

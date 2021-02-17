@@ -1,29 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using WebApiCore.Models;
 using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
-    public class PatientsController : Controller
+    public class PatientViews : Controller
     {
-        private readonly IPatientRepository _context;
+        private readonly IPatientRepository _patients;
 
-        public PatientsController(IPatientRepository context)
+        public PatientViews(IPatientRepository patients)
         {
-            _context = context;
+            _patients = patients;
         }
 
         // GET: Patients
         public async Task<IActionResult> Index()
         {
             /* return View(await _context.Patients.ToListAsync());*/
-            return View(_context.GetAll());
+            return View(await _patients.GetAll());
         }
 
         // GET: Patients/Details/5
@@ -36,7 +32,7 @@ namespace WebApiCore.Controllers
 
             /*var patient = await _context.Patients
                 .FirstOrDefaultAsync(m => m.PatientId == id);*/
-            var patient = _context.Find(id.GetValueOrDefault());
+            var patient = await _patients.Get(id.GetValueOrDefault());
             if (patient == null)
             {
                 return NotFound();
@@ -62,7 +58,7 @@ namespace WebApiCore.Controllers
             {
                 /*_context.Add(patient);
                 await _context.SaveChangesAsync();*/
-                _context.Add(patient);
+                await _patients.Add(patient);
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -77,7 +73,7 @@ namespace WebApiCore.Controllers
             }
 
             /*var patient = await _context.Patients.FindAsync(id);*/
-            var patient = _context.Find(id.GetValueOrDefault());
+            var patient = await _patients.Get(id.GetValueOrDefault());
             if (patient == null)
             {
                 return NotFound();
@@ -115,7 +111,7 @@ namespace WebApiCore.Controllers
                         throw;
                     }                
                 }*/
-                _context.Update(patient);
+                await _patients.Update(patient);
             return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -131,7 +127,7 @@ namespace WebApiCore.Controllers
 
             /* var patient = await _context.Patients
                  .FirstOrDefaultAsync(m => m.PatientId == id);*/
-            _context.Remove(id.GetValueOrDefault());
+            await _patients.Delete(id.GetValueOrDefault());
             return RedirectToAction(nameof(Index));
 /*
             if (patient == null)
@@ -142,20 +138,6 @@ namespace WebApiCore.Controllers
             return View(patient);*/
         }
 
-        /*// POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }*/
-
-        /*private bool PatientExists(int id)
-        {
-            return _context.Patients.Any(e => e.PatientId == id);
-        }*/
+        
     }
 }
