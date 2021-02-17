@@ -20,15 +20,9 @@ namespace WebApiCore
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
+            Configuration = Configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -40,7 +34,7 @@ namespace WebApiCore
 
             //data context connection setup with dapper
             services.AddDbContext<WebAPICoreContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             
