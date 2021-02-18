@@ -93,18 +93,17 @@ namespace WebApiCore.Repository
         {
             using (IDbConnection conn = Connection)
             {
-                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllAppointments", new { PractitionerId = practitionerId },
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPractitionerId", new { PractitionerId = practitionerId },
                    commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
         }
-
-
+        //get all appointments based on patients
         public async Task<IEnumerable<Appointment>> GetAllByPatientId(int patientId)
         {
             using (IDbConnection conn = Connection)
             {
-                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllAppointments", new { PractitionerId = patientId },
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPatientId", new { PatientId = patientId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

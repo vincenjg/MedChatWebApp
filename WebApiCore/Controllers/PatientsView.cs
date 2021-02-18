@@ -6,11 +6,11 @@ using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
-    public class PatientsController : Controller
+    public class PatientsView : Controller
     {
         private readonly IPatientRepository _patients;
 
-        public PatientsController(IPatientRepository patients)
+        public PatientsView(IPatientRepository patients)
         {
             _patients = patients;
         }
@@ -18,7 +18,6 @@ namespace WebApiCore.Controllers
         // GET: Patients
         public async Task<IActionResult> Index()
         {
-            /* return View(await _context.Patients.ToListAsync());*/
             return View(await _patients.GetAll());
         }
 
@@ -30,8 +29,6 @@ namespace WebApiCore.Controllers
                 return NotFound();
             }
 
-            /*var patient = await _context.Patients
-                .FirstOrDefaultAsync(m => m.PatientId == id);*/
             var patient = await _patients.Get(id.GetValueOrDefault());
             if (patient == null)
             {
@@ -56,8 +53,6 @@ namespace WebApiCore.Controllers
         {
             if (ModelState.IsValid)
             {
-                /*_context.Add(patient);
-                await _context.SaveChangesAsync();*/
                 await _patients.Add(patient);
                 return RedirectToAction(nameof(Index));
             }
@@ -95,23 +90,8 @@ namespace WebApiCore.Controllers
 
             if (ModelState.IsValid)
             {
-                /*try
-                {
-                    _context.Update(patient);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PatientExists(patient.PatientId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }                
-                }*/
-                await _patients.Update(patient);
+
+            await _patients.Update(patient);
             return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -124,34 +104,10 @@ namespace WebApiCore.Controllers
             {
                 return NotFound();
             }
-
-            /* var patient = await _context.Patients
-                 .FirstOrDefaultAsync(m => m.PatientId == id);*/
             await _patients.Delete(id.GetValueOrDefault());
             return RedirectToAction(nameof(Index));
-/*
-            if (patient == null)
-            {
-                return NotFound();
-            }
 
-            return View(patient);*/
         }
 
-        /*// POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var patient = await _context.Patients.FindAsync(id);
-            _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }*/
-
-        /*private bool PatientExists(int id)
-        {
-            return _context.Patients.Any(e => e.PatientId == id);
-        }*/
     }
 }
