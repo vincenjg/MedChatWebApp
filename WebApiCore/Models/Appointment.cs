@@ -12,12 +12,12 @@ namespace WebApiCore.Models
     {
         public int AppointmentId { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm:ss}", ApplyFormatInEditMode = true)]
         [DateValidation(ErrorMessage = "Is this a valid date?")]
         public DateTime StartTime { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm:ss}", ApplyFormatInEditMode = true)]
         [DateValidation(ErrorMessage = "Is this a valid date?")]
         public DateTime EndTime { get; set; }
