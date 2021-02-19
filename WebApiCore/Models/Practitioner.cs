@@ -8,7 +8,7 @@ namespace WebApiCore.Models
 {
     public class Practitioner
     {
-        public int Id { get; set; }
+        public int PractitionerID { get; set; }
 
         [Display(Name = "Doctor's Name")]
         public string FirstName { get; set; }

@@ -79,8 +79,9 @@ namespace WebApiCore.Repository
                         EndTime = @EndTime,
                         AppointmentReason = @AppointmentReason,
                         AppointmentInstructions = @AppointmentInstructions,
-                        PatientID = @PatientID
-                        PractitionerID = @PractitionerID";
+                        PatientID = @PatientID,
+                        PractitionerID = @PractitionerID
+                        where AppointmentID = @AppointmentID";
             using (IDbConnection conn = Connection)
             {
                 var affectedRows = await conn.ExecuteAsync(sql, appointment);

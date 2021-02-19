@@ -56,7 +56,7 @@ namespace WebApiCore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("AppointmentId,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace WebApiCore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
+        public async Task<IActionResult> Edit(int id, [Bind("AppointmentId,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
         {
             if (id != appointment.AppointmentId)
             {
