@@ -41,6 +41,9 @@ namespace WebApiCore.Repository
         public async Task<IEnumerable<Appointment>> GetAll()
         {
             string sql = @"SELECT * FROM Appointments";
+            /*string sql = @"SELECT Appointments.AppointmentID, Appointments.StartTime, Appointments.EndTime, Appointments.AppointmentReason, Appointments.AppointmentInstructions, Appointments.PatientID, Appointments.PractitionerID, Patients.EpicID
+                            FROM Appointments
+                            INNER JOIN Patients ON Patients.PatientID = Appointments.PatientID";*/
 
             using (IDbConnection conn = Connection)
             {

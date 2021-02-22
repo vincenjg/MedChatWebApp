@@ -13,6 +13,9 @@
 <table class="table">
     <thead>
         <tr>
+@*            <th>
+                @Html.DisplayNameFor(model => model.EpicId)
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.StartTime)
             </th>
@@ -25,18 +28,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.AppointmentInstructions)
             </th>
-            <th>
+@*            <th>
                 @Html.DisplayNameFor(model => model.Patient)
-            </th>
-            <th>
+            </th>*@
+@*            <th>
                 @Html.DisplayNameFor(model => model.Practitioner)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+@*            <td>
+                @Html.DisplayFor(modelItem => item.EpicId)
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.StartTime)
             </td>
@@ -49,15 +55,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AppointmentInstructions)
             </td>
-            <td>
+@*            <td>
                 @Html.DisplayFor(modelItem => item.Patient.PatientId)
-            </td>
-            <td>
+            </td>*@
+@*            <td>
                 @Html.DisplayFor(modelItem => item.Practitioner.PractitionerID)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AppointmentId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.AppointmentId">Details</a> |
+                <a asp-controller="PatientsView" asp-action="Details" asp-route-id="@item.PatientID">Patient Details</a>
                 <a asp-action="Delete" asp-route-id="@item.AppointmentId">Delete</a>
             </td>
         </tr>
