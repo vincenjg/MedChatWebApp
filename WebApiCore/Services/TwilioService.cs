@@ -1,5 +1,5 @@
 ﻿using WebApiCore.Options;
-using WebApiCore.Shared;
+using WebApiCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,4 +1,4 @@
-﻿using WebApiCore.Shared;
+﻿using WebApiCore.Models;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 

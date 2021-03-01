@@ -1,0 +1,11 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+@{
+    ViewData["Title"] = "Video Chat";
+ Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    @(await Html.RenderComponentAsync<Video>(RenderMode.ServerPrerendered))
+</div>

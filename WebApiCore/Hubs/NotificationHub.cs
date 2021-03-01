@@ -1,4 +1,4 @@
-﻿using WebApiCore.Shared;
+﻿using WebApiCore.Options;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 

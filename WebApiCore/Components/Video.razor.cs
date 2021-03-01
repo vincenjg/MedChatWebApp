@@ -1,5 +1,6 @@
 ﻿using WebApiCore.Interop;
-using WebApiCore.Shared;
+using WebApiCore.Models;
+using WebApiCore.Options;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -10,8 +11,9 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
-namespace WebApiCore.Pages.Video
+namespace WebApiCore.Components
 {
     public partial class Video
     {
@@ -20,7 +22,7 @@ namespace WebApiCore.Pages.Video
         [Inject]
         protected NavigationManager NavigationManager { get; set; } = null!;
         [Inject]
-        protected HttpClient Http { get; set; } = null!;
+        protected ComponentHttpClient Http { get; set; } = null!;
 
         List<RoomDetails> _rooms = new List<RoomDetails>();
 

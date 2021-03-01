@@ -1,11 +1,10 @@
 ﻿using WebApiCore.Interop;
-using WebApiCore.Shared;
+using WebApiCore.Models;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
-namespace WebApiCore.Pages.Components
+namespace WebApiCore.Components
 {
     public partial class Cameras
     {
@@ -22,7 +21,7 @@ namespace WebApiCore.Pages.Components
 
         string? _activeCamera;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             Devices = await JavaScript.GetVideoDevicesAsync();
             State = Devices != null && Devices.Length > 0
