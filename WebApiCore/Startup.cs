@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
+using System;
 
 namespace WebApiCore
 {
@@ -40,13 +41,17 @@ namespace WebApiCore
                 settings.ApiSecret = Configuration.GetSection("Secrets").GetSection("TWILIO_API_SECRET").Value;
                 settings.ApiKey = Configuration.GetSection("Secrets").GetSection("TWILIO_API_KEY").Value;
             });
-
             services.AddSingleton<TwilioService>();
 
-            services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddHttpClient<ComponentHttpClient>();
+
+            services.AddHttpClient("ComponentsClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44361"); ;
+            });
 
             //data context connection setup with dapper
             services.AddDbContext<WebAPICoreContext>(options =>

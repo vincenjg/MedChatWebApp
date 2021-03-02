@@ -19,10 +19,13 @@ namespace WebApiCore.Components
     {
         [Inject]
         protected IJSRuntime? JavaScript { get; set; }
+
         [Inject]
         protected NavigationManager NavigationManager { get; set; } = null!;
+
         [Inject]
-        protected ComponentHttpClient Http { get; set; } = null!;
+        //protected HttpClient _client { get; set; } = null!;
+        protected IHttpClientFactory HttpClientFactory { get; set; } = null!;
 
         List<RoomDetails> _rooms = new List<RoomDetails>();
 
@@ -33,7 +36,8 @@ namespace WebApiCore.Components
 
         protected override async Task OnInitializedAsync()
         {
-            _rooms = await Http.GetFromJsonAsync<List<RoomDetails>>("api/twilio/rooms");
+            var client = HttpClientFactory.CreateClient("ComponentsClient");
+            _rooms = await client.GetFromJsonAsync<List<RoomDetails>>("api/twilio/rooms");
 
             _hubConnection = new HubConnectionBuilder()
                 .AddMessagePackProtocol()
@@ -62,7 +66,8 @@ namespace WebApiCore.Components
         async Task OnRoomAdded(string roomName) =>
             await InvokeAsync(async () =>
             {
-                _rooms = await Http.GetFromJsonAsync<List<RoomDetails>>("api/twilio/rooms");
+                var client = HttpClientFactory.CreateClient("ComponentsClient");
+                _rooms = await client.GetFromJsonAsync<List<RoomDetails>>("api/twilio/rooms");
                 StateHasChanged();
             });
 
@@ -92,12 +97,14 @@ namespace WebApiCore.Components
 
         protected async ValueTask<bool> TryJoinRoom(string? roomName)
         {
+            var client = HttpClientFactory.CreateClient("ComponentsClient");
+
             if (roomName is null || roomName is { Length: 0 })
             {
                 return false;
             }
 
-            var jwt = await Http.GetFromJsonAsync<TwilioJwt>("api/twilio/token");
+            var jwt = await client.GetFromJsonAsync<TwilioJwt>("api/twilio/token");
             if (jwt?.Token is null)
             {
                 return false;
@@ -106,7 +113,7 @@ namespace WebApiCore.Components
             var isRoomInList = _rooms.Any(r => r.Name == roomName);
             if (isRoomInList)
             {
-                var roomCreated = await Http.GetAsync("api/twilio/createroom");
+                var roomCreated = await client.GetAsync("api/twilio/createroom");
             }
 
             var joined = await JavaScript.CreateOrJoinRoomAsync(roomName, jwt.Token);
