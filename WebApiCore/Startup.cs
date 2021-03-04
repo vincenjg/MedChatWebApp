@@ -44,7 +44,7 @@ namespace WebApiCore
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            
+            services.AddScoped<ITemplateRepository, TemplateRepository>();
             //services.AddScoped<IDapper, Dapperr>();
 
             //to be added
