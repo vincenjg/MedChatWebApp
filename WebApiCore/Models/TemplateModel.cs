@@ -8,7 +8,8 @@ namespace WebApiCore.Models
 
     public class TemplateModel
     {
-        public string TemplateName { get; set; }
+/*        public string TemplateName { get; set; }
+*/        
         public string TemplateData { get; set; }
 
     }
