@@ -9,5 +9,6 @@ namespace WebApiCore.Repository
     public interface ITemplateRepository
     {
         Task<int> SendTemplateData(TemplateModel htmlTemplate);
+
     }
 }

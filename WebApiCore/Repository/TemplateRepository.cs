@@ -28,9 +28,10 @@ namespace WebApiCore.Repository
                 return new SqlConnection(_config.GetConnectionString("TestConnection"));
             }
         }
+
         public async Task<int> SendTemplateData(TemplateModel htmlTemplate)
         {
-            var sql = @"INSERT INTO Templates (TemplateData) VALUES (@TemplateData)";
+            var sql = @"INSERT INTO Templates (TemplateName, TemplateData) VALUES (@TemplateName, @TemplateData)";
 
             /*            var m = htmlTemplate;
                         Console.WriteLine(htmlTemplate);
@@ -41,5 +42,6 @@ namespace WebApiCore.Repository
                 return affectedRows;
             }
         }
+
     }
 }

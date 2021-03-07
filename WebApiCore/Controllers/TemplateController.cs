@@ -64,10 +64,12 @@ namespace WebApiCore.Controllers
         {
 
             //TemplateModel htmlInfo = JsonConvert.DeserializeObject<TemplateModel>(data2);
-             _templates.SendTemplateData(data);    
+             _templates.SendTemplateData(data);
             return Json(new { Message = "Success" });
 
         }
+
+
 
 
     }

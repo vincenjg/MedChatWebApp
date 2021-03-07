@@ -8,16 +8,17 @@
         
         console.log("result:", result);
         var dataToSend = JSON.stringify(result);
-        
+        var formName = document.getElementById("nameInput").value;
         /*var dataToSend = {
             TemplateData: $("build-wrap").val()
         }*/
 
+        alert(formName);
      
         $.ajax({
             url: '/Template/SendTemplateData',
             type: 'POST',
-            data: {TemplateData: dataToSend },
+            data: {TemplateName: formName, TemplateData: dataToSend },
             success: function (response) {
                 alert("Saved!")
             },
@@ -37,19 +38,3 @@
   });*/
 });
 
-/*document.getElementById("saveData").addEventListener("click", function (e) {
-
-    var dataToSend = JSON.stringify({ testEditor });
-    alert(dataToSend)
-    $.ajax({
-        url: "Template/SendTemplateData",
-        type: "POST",
-        data: dataToSend,
-        contentType: "application/json; charset=utf-8",
-        sucess: function (data) {
-            alert: ("okay");
-        }
-    });
-
-});
-*/
