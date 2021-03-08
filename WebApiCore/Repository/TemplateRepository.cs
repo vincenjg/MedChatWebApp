@@ -13,9 +13,7 @@ namespace WebApiCore.Repository
     public class TemplateRepository : ITemplateRepository
     {
 
-        private readonly IConfiguration _config;
-
-       
+        private readonly IConfiguration _config;    
 
         public TemplateRepository(IConfiguration configuration)
         {
@@ -26,6 +24,17 @@ namespace WebApiCore.Repository
             get
             {
                 return new SqlConnection(_config.GetConnectionString("TestConnection"));
+            }
+        }
+
+        public async Task<IEnumerable<TemplateModel>> GetTemplateNames()
+        {
+            string sql = @"Select TemplateName FROM Templates";
+
+            using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<TemplateModel>(sql);
+                return result.ToList();
             }
         }
 
@@ -41,6 +50,24 @@ namespace WebApiCore.Repository
                 var affectedRows = await conn.ExecuteAsync(sql, htmlTemplate);
                 return affectedRows;
             }
+        }
+        public async Task<IEnumerable<TemplateModel>> GetAllTemplateNames()
+        {
+            string sql = @"Select TemplateID, TemplateName From Templates";
+
+            using (IDbConnection conn = Connection)
+            {
+
+                var result = await conn.QueryAsync<TemplateModel>(sql);
+                return result;
+            }
+        }
+
+        public IEnumerable<TemplateModel> GetTemplateList()
+        {
+            string query = @"Select TemplateID, TemplateName FROM Templates";
+            var result = Connection.Query<TemplateModel>(query);
+            return result;
         }
 
     }

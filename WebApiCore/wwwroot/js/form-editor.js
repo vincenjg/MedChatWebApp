@@ -5,7 +5,7 @@
     document.getElementById("saveData").addEventListener("click", () => {
 
         const result = formBuilder.actions.getData();
-        
+         
         console.log("result:", result);
         var dataToSend = JSON.stringify(result);
         var formName = document.getElementById("nameInput").value;

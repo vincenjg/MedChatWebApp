@@ -1,16 +1,73 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiCore.Models;
+using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TemplateViewController : Controller
     {
-        public IActionResult Index()
+        private readonly IConfiguration _config;
+
+        public TemplateViewController(IConfiguration configuration)
         {
-            return View();
+            _config = configuration;
         }
+        private IDbConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+            }
+        }
+
+        [HttpGet(nameof(GetByFormName))]
+        public async Task<IEnumerable<TemplateModel>> GetByFormName(string name)
+        {
+            string sql = @"Select TemplateName as TemplateName, TemplateData FROM Templates WHERE TemplateName = @TemplateName";
+
+            /*using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<TemplateModel>(sql);
+                return result.ToList();
+            }*/
+
+            using (IDbConnection conn = Connection)
+            {
+
+                var result = await conn.QueryAsync<TemplateModel>(sql, new { TemplateName = name });
+                return result.ToList();
+            }
+        }
+
+
+        [HttpGet(nameof(GetAllTemplateNames))]
+        public async Task<IEnumerable<TemplateModel>> GetAllTemplateNames()
+        {
+            string sql = @"Select TemplateName From Templates";
+
+            /*using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<TemplateModel>(sql);
+                return result.ToList();
+            }*/
+
+            using (IDbConnection conn = Connection)
+            {
+
+                var result = await conn.QueryAsync<TemplateModel>(sql);
+                return result;
+            }
+        }
+
     }
 }

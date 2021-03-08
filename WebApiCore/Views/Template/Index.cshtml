@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebApiCore.Models.TemplateModel
+@{
     ViewData["Title"] = "Custom Template";
 }
 
@@ -6,13 +7,30 @@
 @*<div id="fb-editor"></div>
 *@
 
-<div class="SaveDataWrap">
-    <input id="nameInput" type="text" name="TemplateName"/>
-    <button id="saveData" type="button">Save Data</button>
-</div>
+<tr>
+    <td>
+        <div class="editor-label">
+            @Html.Label("Select Template From the List")
+        </div>
+    </td>
+    <td>
+        <div>
+            <div class="col-md-2">
+                @Html.DropDownList("Dropdown1", ViewBag.TemplateList as SelectList)
+            </div>
+            <div class="col-md-2">
+                <button id="loadData" type="button">Load</button>
+            </div>
+        </div>
+    </td>
+    
+</tr>
 
 <div id="build-wrap"></div>
-
+<div class="SaveDataWrap">
+    <input id="nameInput" type="text" name="TemplateName" />
+    <button id="saveData" type="button">Save Data</button>
+</div>
 
 
 @section scripts {

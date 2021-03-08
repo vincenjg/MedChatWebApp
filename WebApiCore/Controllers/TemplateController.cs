@@ -1,12 +1,6 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using WebApiCore.Models;
 using WebApiCore.Repository;
@@ -16,48 +10,26 @@ namespace WebApiCore.Controllers
     public class TemplateController : Controller
 
     {
+        private readonly ITemplateRepository _templates;
 
-        /*public TemplateController(ITemplateRepository templates)
+        public TemplateController(ITemplateRepository templates)
         {
             _templates = templates;
-        }*/
-
-
-
-        private static IConfiguration _config;
-
-        public TemplateController(IConfiguration configuration)
-        {
-            _config = configuration;
         }
-        private IDbConnection Connection
-        {
-
-            get
-            {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
-            }
-        }
-
-        private TemplateRepository _templates = new TemplateRepository(_config);
-
-
-        /*        [HttpPost]
-                public async Task<int>  SendTemplateData(string htmlTemplate)
-                {
-                    var sql = @"INSERT Templates2 (TemplateData) VALUES (@TemplateData)";
-
-                    using (IDbConnection conn = Connection)
-                    {
-                        var affectedRows = await conn.ExecuteAsync(sql, htmlTemplate);
-                        return affectedRows;
-                    }
-                }*/
-
         public IActionResult Index()
         {
+            ViewBag.TemplateList = new SelectList(_templates.GetTemplateList(), "TemplateID", "TemplateName");
             return View();
+
+
         }
+
+/*        public async Task<string> GetString()
+        {
+            ViewBag.TemplateList = new SelectList((System.Collections.IEnumerable)_templates.GetAllTemplateNames(), "TemplateID", "TemplateName");
+
+            return await Task.FromResult("");
+        }*/
 
         [HttpPost]
         public ActionResult SendTemplateData(TemplateModel data)
@@ -68,9 +40,6 @@ namespace WebApiCore.Controllers
             return Json(new { Message = "Success" });
 
         }
-
-
-
 
     }
 }
