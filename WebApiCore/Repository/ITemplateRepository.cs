@@ -10,9 +10,12 @@ namespace WebApiCore.Repository
     public interface ITemplateRepository
     {
         Task<int> SendTemplateData(TemplateModel htmlTemplate);
-        Task<IEnumerable<TemplateModel>> GetTemplateNames();
 
         Task<IEnumerable<TemplateModel>> GetAllTemplateNames();
         IEnumerable<TemplateModel> GetTemplateList();
+
+        Task<IEnumerable<TemplateModel>> GetById(int id);
+
+        Task<TemplateModel> Get(int id);
     }
 }

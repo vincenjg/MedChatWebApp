@@ -31,22 +31,22 @@ namespace WebApiCore.Controllers
         }
 
         [HttpGet(nameof(GetByFormName))]
-        public async Task<IEnumerable<TemplateModel>> GetByFormName(string name)
+        public async Task<IEnumerable<TemplateModel>> GetByFormName(int id)
         {
-            string sql = @"Select TemplateName as TemplateName, TemplateData FROM Templates WHERE TemplateName = @TemplateName";
-
-            /*using (IDbConnection conn = Connection)
-            {
-                var result = await conn.QueryAsync<TemplateModel>(sql);
-                return result.ToList();
-            }*/
+            string sql = @"Select TemplateData FROM Templates WHERE TemplateID = @TemplateId";
 
             using (IDbConnection conn = Connection)
             {
 
-                var result = await conn.QueryAsync<TemplateModel>(sql, new { TemplateName = name });
-                return result.ToList();
+                var result = await conn.QueryAsync<TemplateModel>(sql, new { TemplateId = id });
+                return result;
             }
+            /*using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<TemplateModel>("dbo.spGetTemplates", new { TemplateID = id },
+                   commandType: CommandType.StoredProcedure);
+                return result;
+            }*/
         }
 
 
