@@ -1,20 +1,24 @@
-﻿//var testEditor = document.getElementById("friendform");
+﻿var result = '[[{"type":"text","label":"step 1","className":"form-control","name":"text-1545217902718","subtype":"text"}],[{"type":"text","label":"step 2","className":"form-control","name":"text-1545217905331","subtype":"text"}],[{"type":"text","label":"step 3","className":"form-control","name":"text-1545217906652","subtype":"text"}],[{"type":"text","label":"step 4","className":"form-control","name":"text-1545217908197","subtype":"text"}]]';
 
+// result contains multi-tab json data.
 
-$(document).ready(function () {
-    $("#btnsubmit").click(function (e) {
-        //Serialize the form datas.  
-        //var valdata = $("#build-wrap").serialize();
-        var valdata = $("#friendform : input")
-        //to get alert popup  
-        alert(valdata);
-        $.ajax({
-            url: "/Friend/AddFriend",
-            type: "POST",
-            dataType: 'json',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: valdata
-        });
-    });
-});  
+var res = jQuery.parseJSON(result);
+var stepLen = res.length;
+var j;
+for (var i = 1; i <= stepLen; i++) {
+    j = i + 1;
+    var final_tab_id = j
+    var tabId = "step-" + j.toString();
 
+    var $newPageTemplate = $(document.getElementById("new-step"));
+    var $newPage = $newPageTemplate.clone().attr("id", tabId).addClass("fb-editor");
+    var $newTab = $('#add-step-tab').clone().removeAttr("id");
+    var $tabLink = $("a", $newTab).attr("href", "#" + tabId).text("Step " + j);
+
+    $newPage.insertBefore($newPageTemplate);
+    $newTab.insertBefore('#add-step-tab');
+    $fbPages.tabs("refresh");
+    $fbPages.tabs("option", "active", i);
+    fbInstances.push($newPage.formBuilder(fbOptions));
+    formBuilder2.actions.setData(res[i - 1])
+}
