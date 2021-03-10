@@ -23,15 +23,24 @@
             </div>
         </div>
     </td>
-
 </tr>
-
-<div id="build-wrap">
-    
-</div>
+<br />
+<br />
+@*This will be used to save Custom forms that user can build for different scenarios.*@
+<form id="build-wrap">
+    <div class="SaveDataWrap">
+        <input id="nameInput" type="text" name="TemplateName" />
+        <button id="saveData" type="button">Save Form</button>
+    </div>
+</form>
+<br />
+<br />
+@*This will be used to save whatever the user loaded into the screen and worked on*@
+<form id="render-wrap">
+</form>
 <div class="SaveDataWrap">
-    <input id="nameInput" type="text" name="TemplateName" />
-    <button id="saveData" type="button">Save Data</button>
+    <input id="dataInput" type="text" name="TemplateName" />
+    <button id="saveForm" type="button">Save Rendered Form</button>
 </div>
 
 

@@ -1,7 +1,8 @@
 ﻿jQuery(($) => {
   const fbEditor = document.getElementById("build-wrap");
   const formBuilder = $(fbEditor).formBuilder();
-  
+    const fbRender = document.getElementById("render-wrap");
+    
 
     document.getElementById("saveData").addEventListener("click", () => {
 
@@ -12,7 +13,7 @@
         /*var dataToSend = {
             TemplateData: $("build-wrap").val()
         }*/
-
+        console.log(dataToSend);
         alert(formName);     
         $.ajax({
             url: '/Template/SendTemplateData',
@@ -67,7 +68,35 @@
                     }(jQuery);
 
                     const formData = data;
-                    $(fbEditor).formRender({ formData });
+
+                    
+                    //const fabRender = $(fbRender).formBuilder();
+                    //$(fbRender).formRender({ formData });
+                    const fabRender = $(fbRender).formBuilder({ formData });
+                    document.getElementById("saveForm").addEventListener("click", () => {
+                        /*var result2 = {
+                            TemplateData: $("render-wrap").val()
+                        }*/
+
+                        const result2 = fabRender.actions.getData();
+                        var renderToSend = JSON.stringify(result2);
+                        var renderName = document.getElementById("dataInput").value;
+
+                        console.log("result:", renderToSend);
+                        alert(renderName);
+
+                        $.ajax({
+                            url: '/Template/SendTemplateData',
+                            type: 'POST',
+                            data: { TemplateName: renderName, TemplateData: renderToSend },
+                            success: function (response) {
+                                alert("Saved!")
+                            },
+                            error: function (response) {
+                                alert("Error - Contact Admins!")
+                            }
+                        });
+                    });
 
                     
                 },
@@ -77,6 +106,6 @@
             });
             
         });
-
+    
 });
 
