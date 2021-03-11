@@ -36,6 +36,7 @@ namespace WebApiCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews().AddNewtonsoftJson();
 
             //data context connection setup with dapper            
@@ -43,10 +44,6 @@ namespace WebApiCore
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             
-            //services.AddScoped<IDapper, Dapperr>();
-
-            //to be added
-            //added this part after setting up the registration
             services.AddRazorPages();
 
             //adding signal R
@@ -73,6 +70,8 @@ namespace WebApiCore
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+
 
             app.UseRouting();
 
