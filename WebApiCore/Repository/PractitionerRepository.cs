@@ -30,13 +30,6 @@ namespace WebApiCore.Repository
             }
         }
 
-        private UserManager<Practitioner> UserMgr { get; }
-        private SignInManager<Practitioner> SignInMgr { get; }
-        public PractitionerRepository(UserManager<Practitioner> userManager,
-            SignInManager<Practitioner> signInManager)
-        {
-
-        }
         /// <summary>
         /// The following methods will be used to enable the creation of practitioner accounts.         
         /// </summary>

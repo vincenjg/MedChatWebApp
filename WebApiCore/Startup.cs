@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
 using WebApiCore.Repository;
 using static System.Environment;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApiCore
 {
@@ -41,9 +42,12 @@ namespace WebApiCore
 
             //data context connection setup with dapper            
             services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            //services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            
+
+            services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
+            services.AddTransient<IUserStore<Practitioner>, UserStore>();
+
             services.AddRazorPages();
 
             //adding signal R
@@ -53,6 +57,7 @@ namespace WebApiCore
             /* var dbConnection = Configuration.GetSection("TestConnection");
              services.Configure<ConnectionStrings>(dbConnection);
              services.AddDataAccess();*/
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
