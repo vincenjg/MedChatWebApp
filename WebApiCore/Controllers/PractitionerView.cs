@@ -20,11 +20,11 @@ namespace WebApiCore.Controllers
         }
 
         
-
+/*
         public async Task<IActionResult> Register()
         {
             return View(await _practitioner.Register());
-        }
+        }*/
         public async Task<IActionResult> Index()
         {
             return View(await _practitioner.GetAll());
