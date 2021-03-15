@@ -11,10 +11,8 @@ using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
 using WebApiCore.Models;
 using WebApiCore.Utilities;
-using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
 using WebApiCore.Repository;
-using static System.Environment;
 using Microsoft.AspNetCore.Identity;
 
 namespace WebApiCore
@@ -47,6 +45,7 @@ namespace WebApiCore
 
             services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
             services.AddTransient<IUserStore<Practitioner>, UserStore>();
+            services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 
 
             services.AddRazorPages();
 

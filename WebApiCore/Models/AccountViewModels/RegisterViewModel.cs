@@ -14,7 +14,7 @@ namespace WebApiCore.Models.AccountViewModels
 
         [Required]
         [DataType(DataType.Password)]
-        public string TestPassword { get; set; }
+        public string Password { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
