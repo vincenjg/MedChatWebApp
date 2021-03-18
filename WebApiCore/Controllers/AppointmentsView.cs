@@ -27,7 +27,7 @@ namespace WebApiCore.Controllers
         //test to view only appointments based on a practitioner's ID
         public async Task<IActionResult> GetPrac()
         {
-            return View(await _appointments.GetAllByPractitionerId(5));
+            return View(await _appointments.GetAllByPractitionerId(31));
         }
 
         public async Task<IActionResult> Details(int? id)
