@@ -11,51 +11,127 @@ using WebApiCore.Models;
 namespace WebApiCore.Repository
 {
 
-    //we're isolating the Dapper inside this repo, so it's easier to work on on, switch, etc. 
+    /// <summary>
+    /// This is representative of the Patients table in out database.
+    /// All operations regarding it are handled here.
+    /// </summary>
     public class PatientRepository : IPatientRepository
     {
-        //haveto assign the connection to idbconnection
-        private IDbConnection _db;
+        private readonly IConfiguration _config;
 
         public PatientRepository(IConfiguration configuration)
         {
-            this._db = new SqlConnection(configuration.GetConnectionString("TestConnection"));
+            _config = configuration;
         }
 
-        
-        public Patient Add(Patient patient)
+        private IDbConnection Connection
+        {
+            get 
+            { 
+                return new SqlConnection(_config.GetConnectionString("TestConnection")); 
+            }
+        }
+
+
+        public async Task<Patient> Get(int id)
+        {
+            string sql = @"SELECT PatientID AS Id, 
+                                  EpicId AS EpicId,
+                                  FirstName,
+                                  LastName, 
+                                  EmailAddress,
+                                  TestPassword
+                         FROM Patients WHERE PatientID = @Id";
+
+            using (IDbConnection conn = Connection)
+            {
+
+                var result = await conn.QueryAsync<Patient>(sql, new { Id = id });
+                return result.FirstOrDefault();
+            }
+        }
+
+        public async Task<Patient> Get(string email, string password)
+        {
+            var sql = @"SELECT PatientID AS Id, EpicID, FirstName, LastName, EmailAddress, TestPassword
+                        FROM Patients Where EmailAddress = @EmailAddress AND TestPassword = @Password";
+
+            var dbparams = new DynamicParameters();
+            dbparams.Add(email);
+            dbparams.Add(password);
+
+            using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Patient>(sql, dbparams);
+                return result.FirstOrDefault();
+            }
+        }
+
+        public async Task<IEnumerable<Patient>> GetAll()
+        {
+            var sql = @"SELECT * FROM Patients";
+
+            using(IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Patient>(sql);
+                return result.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Return all patients associated with a specific practitioner.
+        /// </summary>
+        /// <param name="practitionerId">Id of specific practitioner</param>
+        /// <returns>A list of patients that "belong" to the specified practitioner.</returns>
+        public async Task<IEnumerable<Patient>> GetAllById(int practitionerId)
+        {
+            using (IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Practitioner>("dbo.spGetAllPatients", new { PractitionerID = practitionerId },
+                   commandType: CommandType.StoredProcedure);
+                return (List<Patient>)result;
+            }
+        }
+
+        public async Task<int> Add(Patient patient)
         {
             var sql = @"INSERT INTO Patients (FirstName, LastName, TestPassword, EmailAddress, EpicID)
                         VALUES (@FirstName, @LastName, @TestPassword, @EmailAddress, @EpicId)";
-            //directly passing the patient object cuz dapper is able to link it. 
-            var id = _db.Query<int>(sql, patient).Single();
-            patient.PatientId = id;
-            return patient;
+
+            using (IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, patient);
+                return affectedRows;
+            }
         }
 
-        public Patient Find(int id)
+
+        public async Task<int> Delete(int id)
         {
-            var sql = "Select * FROM Patients WHERE PatientID = @PatientId";
-            return _db.Query<Patient>(sql, new { @PatientId = id }).Single();
+            var sql = @"DELETE FROM Patients WHERE PatientID = @Id";
+
+            using (IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, new { Id = id });
+                return affectedRows;
+            }
         }
 
-        public List<Patient> GetAll()
+        public async Task<int> Update(Patient patient)
         {
-            var sql = "SELECT * FROM Patients";
-            return _db.Query<Patient>(sql).ToList();
-        }
+            var sql = @"UPDATE Patients 
+                        SET FirstName = @FirstName, 
+                        LastName = @LastName, 
+                        TestPassword = @TestPassword, 
+                        EmailAddress = @EmailAddress, 
+                        EpicID = @EpicID 
+                        WHERE PatientId = @PatientId";
 
-        public void Remove(int id)
-        {
-            var sql = "DELETE FROM Patients WHERE PatientId = @Id";
-            _db.Execute(sql, new { id });
-        }
-
-        public Patient Update(Patient patient)
-        {
-            var sql = "UPDATE Patients SET FirstName = @FirstName, LastName = @LastName, TestPassword = @TestPassword, EmailAddress = @EmailAddress, EpicID = @EpicID WHERE PatientId = @PatientId";
-            _db.Execute(sql, patient);
-            return patient;
+            using(IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, patient);
+                return affectedRows;
+            }
         }
     }
 }

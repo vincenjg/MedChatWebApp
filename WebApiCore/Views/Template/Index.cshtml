@@ -1,0 +1,53 @@
+﻿@model WebApiCore.Models.TemplateModel
+@{
+    ViewData["Title"] = "Custom Template";
+}
+
+
+@*<div id="fb-editor"></div>
+*@
+
+<tr>
+    <td>
+        <div class="editor-label">
+            @Html.Label("Select Template From the List")
+        </div>
+    </td>
+    <td>
+        <div>
+            <div class="col-md-2">
+                @Html.DropDownList("Dropdown1", ViewBag.TemplateList as SelectList)
+            </div>
+            <div class="col-md-2">
+                <button id="loadData" type="button">Load</button>
+            </div>
+        </div>
+    </td>
+</tr>
+<br />
+<br />
+@*This will be used to save Custom forms that user can build for different scenarios.*@
+<form id="build-wrap">
+    <div class="SaveDataWrap">
+        <input id="nameInput" type="text" name="TemplateName" />
+        <button id="saveData" type="button">Save Form</button>
+    </div>
+</form>
+<br />
+<br />
+@*This will be used to save whatever the user loaded into the screen and worked on*@
+<form id="render-wrap">
+</form>
+<div class="SaveDataWrap">
+    <input id="dataInput" type="text" name="TemplateName" />
+    <button id="saveForm" type="button">Save Rendered Form</button>
+</div>
+
+
+@section scripts {
+
+    <script src="~/js/form-editor.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    @*<script src="~/js/senddata.js"></script>*@
+
+}
