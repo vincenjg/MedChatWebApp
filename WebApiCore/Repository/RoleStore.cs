@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -13,21 +14,28 @@ namespace WebApiCore.Repository
 {
     public class RoleStore : IRoleStore<PractitionerRoleModel>
     {
-        private readonly string _connectionString;
+        private readonly IConfiguration _config;
 
         public RoleStore(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("TestConnection");
+            _config = configuration;
+        }
+
+        private IDbConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+            }
         }
 
         public async Task<IdentityResult> CreateAsync(PractitionerRoleModel role, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                role.Id = await connection.QuerySingleAsync<int>($@"INSERT INTO [PractitionerRole] ([Name], [NormalizedName])
+                role.Id = await conn.QuerySingleAsync<int>($@"INSERT INTO [PractitionerRole] ([Name], [NormalizedName])
                     VALUES (@{nameof(PractitionerRoleModel.Name)}, @{nameof(PractitionerRoleModel.NormalizedName)});
                     SELECT CAST(SCOPE_IDENTITY() as int)", role);
             }
@@ -39,10 +47,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                await connection.ExecuteAsync($@"UPDATE [PractitionerRole] SET
+                await conn.ExecuteAsync($@"UPDATE [PractitionerRole] SET
                     [Name] = @{nameof(PractitionerRoleModel.Name)},
                     [NormalizedName] = @{nameof(PractitionerRoleModel.NormalizedName)}
                     WHERE [Id] = @{nameof(PractitionerRoleModel.Id)}", role);
@@ -55,10 +62,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                await connection.ExecuteAsync($"DELETE FROM [PractitionerRole] WHERE [Id] = @{nameof(PractitionerRoleModel.Id)}", role);
+                await conn.ExecuteAsync($"DELETE FROM [PractitionerRole] WHERE [Id] = @{nameof(PractitionerRoleModel.Id)}", role);
             }
 
             return IdentityResult.Success;
@@ -95,10 +101,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<PractitionerRoleModel>($@"SELECT * FROM [PractitionerRole]
+                return await conn.QuerySingleOrDefaultAsync<PractitionerRoleModel>($@"SELECT * FROM [PractitionerRole]
                     WHERE [Id] = @{nameof(roleId)}", new { roleId });
             }
         }
@@ -107,10 +112,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<PractitionerRoleModel>($@"SELECT * FROM [PractitionerRole]
+                return await conn.QuerySingleOrDefaultAsync<PractitionerRoleModel>($@"SELECT * FROM [PractitionerRole]
                     WHERE [NormalizedName] = @{nameof(normalizedRoleName)}", new { normalizedRoleName });
             }
         }

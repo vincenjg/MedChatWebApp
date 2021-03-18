@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
@@ -14,21 +15,29 @@ namespace WebApiCore.Repository
     public class UserStore : IUserStore<Practitioner>, IUserEmailStore<Practitioner>, IUserPhoneNumberStore<Practitioner>,
         IUserTwoFactorStore<Practitioner>, IUserPasswordStore<Practitioner>, IUserRoleStore<Practitioner>
     {
-        private readonly string _connectionString;
+        private readonly IConfiguration _config;
 
         public UserStore(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("TestConnection");
+            _config = configuration;
         }
+
+        private IDbConnection Connection
+        {
+            get
+            {
+                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+            }
+        }
+
 
         public async Task<IdentityResult> CreateAsync(Practitioner user, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                user.PractitionerID = await connection.QuerySingleAsync<int>($@"INSERT INTO [Practitioners] ([LastName], [FirstName], [Title], [UserName], [NormalizedUserName], [EmailAddress],
+                user.PractitionerID = await conn.QuerySingleAsync<int>($@"INSERT INTO [Practitioners] ([LastName], [FirstName], [Title], [UserName], [NormalizedUserName], [EmailAddress],
                     [NormalizedEmail], [EmailConfirmed], [PasswordHash], [PhoneNumber], [PhoneNumberConfirmed], [TwoFactorEnabled])
                     VALUES (@{nameof(Practitioner.LastName)}, @{nameof(Practitioner.FirstName)}, @{nameof(Practitioner.Title)}, @{nameof(Practitioner.UserName)}, @{nameof(Practitioner.NormalizedUserName)}, @{nameof(Practitioner.EmailAddress)},
                     @{nameof(Practitioner.NormalizedEmail)}, @{nameof(Practitioner.EmailConfirmed)}, @{nameof(Practitioner.PasswordHash)},
@@ -43,10 +52,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                await connection.ExecuteAsync($"DELETE FROM [Practitioners] WHERE [PractitionerID] = @{nameof(Practitioner.PractitionerID)}", user);
+                await conn.ExecuteAsync($"DELETE FROM [Practitioners] WHERE [PractitionerID] = @{nameof(Practitioner.PractitionerID)}", user);
             }
 
             return IdentityResult.Success;
@@ -56,10 +64,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
+                return await conn.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
                     WHERE [PractitionerID] = @{nameof(userId)}", new { userId });
             }
         }
@@ -68,10 +75,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
+                return await conn.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
                     WHERE [NormalizedUserName] = @{nameof(normalizedUserName)}", new { normalizedUserName });
             }
         }
@@ -107,10 +113,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                await connection.ExecuteAsync($@"UPDATE [Practitioners] SET
+                await conn.ExecuteAsync($@"UPDATE [Practitioners] SET
                     [LastName] = @{nameof(Practitioner.LastName)},
                     [FirstName] = @{nameof(Practitioner.FirstName)},
                     [Title] = @{nameof(Practitioner.Title)},
@@ -156,10 +161,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                return await connection.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
+                return await conn.QuerySingleOrDefaultAsync<Practitioner>($@"SELECT * FROM [Practitioners]
                     WHERE [NormalizedEmail] = @{nameof(normalizedEmail)}", new { normalizedEmail });
             }
         }
@@ -228,16 +232,15 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
                 var normalizedName = roleName.ToUpper();
-                var roleId = await connection.ExecuteScalarAsync<int?>($"SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @{nameof(normalizedName)}", new { normalizedName });
+                var roleId = await conn.ExecuteScalarAsync<int?>($"SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @{nameof(normalizedName)}", new { normalizedName });
                 if (!roleId.HasValue)
-                    roleId = await connection.ExecuteAsync($"INSERT INTO [PractitionerRole]([Name], [NormalizedName]) VALUES(@{nameof(roleName)}, @{nameof(normalizedName)})",
+                    roleId = await conn.ExecuteAsync($"INSERT INTO [PractitionerRole]([Name], [NormalizedName]) VALUES(@{nameof(roleName)}, @{nameof(normalizedName)})",
                         new { roleName, normalizedName });
 
-                await connection.ExecuteAsync($"IF NOT EXISTS(SELECT 1 FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}) " +
+                await conn.ExecuteAsync($"IF NOT EXISTS(SELECT 1 FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}) " +
                     $"INSERT INTO [PractitionerUserRole]([UserId], [RoleId]) VALUES(@userId, @{nameof(roleId)})",
                     new { userId = user.PractitionerID, roleId });
             }
@@ -247,12 +250,11 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                var roleId = await connection.ExecuteScalarAsync<int?>("SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
+                var roleId = await conn.ExecuteScalarAsync<int?>("SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
                 if (!roleId.HasValue)
-                    await connection.ExecuteAsync($"DELETE FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}", new { userId = user.PractitionerID, roleId });
+                    await conn.ExecuteAsync($"DELETE FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}", new { userId = user.PractitionerID, roleId });
             }
         }
 
@@ -260,10 +262,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                await connection.OpenAsync(cancellationToken);
-                var queryResults = await connection.QueryAsync<string>("SELECT r.[Name] FROM [PractitionerRole] r INNER JOIN [PractitionerUserRole] ur ON ur.[RoleId] = r.Id " +
+                var queryResults = await conn.QueryAsync<string>("SELECT r.[Name] FROM [PractitionerRole] r INNER JOIN [PractitionerUserRole] ur ON ur.[RoleId] = r.Id " +
                     "WHERE ur.UserId = @userId", new { userId = user.PractitionerID });
 
                 return queryResults.ToList();
@@ -274,11 +275,11 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                var roleId = await connection.ExecuteScalarAsync<int?>("SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
+                var roleId = await conn.ExecuteScalarAsync<int?>("SELECT [Id] FROM [PractitionerRole] WHERE [NormalizedName] = @normalizedName", new { normalizedName = roleName.ToUpper() });
                 if (roleId == default(int)) return false;
-                var matchingRoles = await connection.ExecuteScalarAsync<int>($"SELECT COUNT(*) FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}",
+                var matchingRoles = await conn.ExecuteScalarAsync<int>($"SELECT COUNT(*) FROM [PractitionerUserRole] WHERE [UserId] = @userId AND [RoleId] = @{nameof(roleId)}",
                     new { userId = user.PractitionerID, roleId });
 
                 return matchingRoles > 0;
@@ -289,9 +290,9 @@ namespace WebApiCore.Repository
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (IDbConnection conn = Connection)
             {
-                var queryResults = await connection.QueryAsync<Practitioner>("SELECT u.* FROM [Practitioners] u " +
+                var queryResults = await conn.QueryAsync<Practitioner>("SELECT u.* FROM [Practitioners] u " +
                     "INNER JOIN [PractitionerUserRole] ur ON ur.[UserId] = u.[Id] INNER JOIN [PractitionerRole] r ON r.[Id] = ur.[RoleId] WHERE r.[NormalizedName] = @normalizedName",
                     new { normalizedName = roleName.ToUpper() });
 
