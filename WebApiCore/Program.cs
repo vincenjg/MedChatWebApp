@@ -14,20 +14,20 @@ namespace WebApiCore
     {
         public static void Main(string[] args)
         {
-            //CreateHostBuilder(args).Build().Run();
-            BuildWebHost(args).Run();
+            CreateHostBuilder(args).Build().Run();
+            /*BuildWebHost(args).Run();*/
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+ /*       public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .Build();
+                .Build();*/
 
-        /*public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });*/
+                });
     }
 }
