@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,22 +11,28 @@ namespace WebApiCore.Models
     {
         public int PractitionerID { get; set; }
 
-        [Required(ErrorMessage = "Please fill out the field")]
         [Display(Name = "Doctor's Name")]
         public string FirstName { get; set; }
-        [Required(ErrorMessage = "Please fill out the field")]
         public string LastName { get; set; }
-        [Required(ErrorMessage = "Please fill out the field")]
+        public string UserName { get; set; }
         public string Title { get; set; }
-        [Required(ErrorMessage = "Please fill out the field")]
         public string EmailAddress { get; set; }
-        [Required(ErrorMessage = "Please fill out the field")]
         public string TestPassword { get; set; }
-        [Required(ErrorMessage = "Please fill out the field")]
         public bool IsOnline { get; set; }
+        
         public string FullName
         {
             get => FirstName + " " + LastName + " " + Title;
         }
+
+        //things added to follow Microsoft Identity
+        public string NormalizedUserName { get; set; }
+        public string NormalizedEmail { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string PasswordHash { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+
     }
 }

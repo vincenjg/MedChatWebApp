@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApiCore.Models;
 using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
@@ -16,6 +18,13 @@ namespace WebApiCore.Controllers
         {
             _practitioner = practitioner;
         }
+
+        
+/*
+        public async Task<IActionResult> Register()
+        {
+            return View(await _practitioner.Register());
+        }*/
         public async Task<IActionResult> Index()
         {
             return View(await _practitioner.GetAll());

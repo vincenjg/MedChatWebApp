@@ -11,10 +11,9 @@ using Microsoft.Extensions.Hosting;
 using WebApiCore.Hubs;
 using WebApiCore.Models;
 using WebApiCore.Utilities;
-using Microsoft.EntityFrameworkCore;
 using WebApiCore.Services;
 using WebApiCore.Repository;
-using static System.Environment;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApiCore
 {
@@ -36,17 +35,18 @@ namespace WebApiCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllersWithViews().AddNewtonsoftJson();
 
-            //data context connection setup with dapper
+            //data context connection setup with dapper            
             services.AddScoped<IPatientRepository, PatientRepository>();
-            services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            //services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-            services.AddScoped<ITemplateRepository, TemplateRepository>();
-            //services.AddScoped<IDapper, Dapperr>();
 
-            //to be added
-            //added this part after setting up the registration
+            services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
+            services.AddTransient<IUserStore<Practitioner>, UserStore>();
+            services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 
+
             services.AddRazorPages();
 
             //adding signal R
@@ -56,6 +56,7 @@ namespace WebApiCore
             /* var dbConnection = Configuration.GetSection("TestConnection");
              services.Configure<ConnectionStrings>(dbConnection);
              services.AddDataAccess();*/
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +75,8 @@ namespace WebApiCore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
+
             app.UseRouting();
 
             app.UseAuthorization();
@@ -85,7 +88,7 @@ namespace WebApiCore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Template}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 //to be added ... this is for URLs
                 endpoints.MapRazorPages();
