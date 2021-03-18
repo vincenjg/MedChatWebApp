@@ -39,8 +39,6 @@ namespace WebApiCore
             services.AddControllersWithViews().AddNewtonsoftJson();
 
             //data context connection setup with dapper
-            services.AddDbContext<WebAPICoreContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();

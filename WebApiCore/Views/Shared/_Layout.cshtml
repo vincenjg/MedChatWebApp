@@ -18,13 +18,15 @@
                 </button>
 
 
+                <!--<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">-->
+                <!--<!--This will show the logout and email/username (when it's setup) at the top when the user is signed in
+                This will also show the login and register button at the top right-->
 
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <!--This will show the logout and email/username (when it's setup) at the top when the user is signed in
-                    This will also show the login and register button at the top right-->
+                <div class="navbar-collapse collapse">
                     <partial name="_LoginPartial.cshtml" />
-
                 </div>
+
+                <!--</div>-->
             </div>
         </nav>
     </header>
@@ -47,7 +49,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
-@*    <script src="https://formbuilder.online/assets/js/form-render.min.js"></script>
-*@    @RenderSection("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
