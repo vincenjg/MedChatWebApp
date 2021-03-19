@@ -4,17 +4,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
 using WebApiCore.Models;
 using WebApiCore.Repository;
-
+using WebApiCore.Services;
 namespace WebApiCore.Controllers
 {
     public class TemplateController : Controller
 
     {
         private readonly ITemplateRepository _templates;
+        private readonly IUserService _userService;
 
-        public TemplateController(ITemplateRepository templates)
+        public TemplateController(ITemplateRepository templates, IUserService userService)
         {
             _templates = templates;
+            _userService = userService;
         }
         public IActionResult Index()
         {
@@ -26,7 +28,8 @@ namespace WebApiCore.Controllers
         public ActionResult SendTemplateData(TemplateModel data)
         {
             //TemplateModel htmlInfo = JsonConvert.DeserializeObject<TemplateModel>(data2);
-             _templates.SendTemplateData(data);
+            var userID = _userService.GetUserId();
+             _templates.SendTemplateData(data, userID);
             return Json(new { Message = "Success" });
         }
 
