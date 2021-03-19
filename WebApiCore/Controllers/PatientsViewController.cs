@@ -6,11 +6,11 @@ using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
-    public class PatientsView : Controller
+    public class PatientsViewController : Controller
     {
         private readonly IPatientRepository _patients;
 
-        public PatientsView(IPatientRepository patients)
+        public PatientsViewController(IPatientRepository patients)
         {
             _patients = patients;
         }
@@ -18,7 +18,8 @@ namespace WebApiCore.Controllers
         // GET: Patients
         public async Task<IActionResult> Index()
         {
-            return View(await _patients.GetAll());
+            //return View(await _patients.GetAll());
+            return View(await _patients.GetAllById(0));
         }
 
         // GET: Patients/Details/5

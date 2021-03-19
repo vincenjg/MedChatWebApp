@@ -25,7 +25,7 @@ namespace WebApiCore.Controllers
         public async Task<IActionResult> Index()
         {
             /*return View(await _appointments.GetAll());*/
-            var userID = _userService.GetUserId();
+            //var userID = _userService.GetUserId();
             return View(await _appointments.GetAllByPractitionerId(0));
         }
 

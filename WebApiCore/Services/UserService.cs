@@ -9,7 +9,7 @@ namespace WebApiCore.Services
 {
     public class UserService : IUserService
     {
-        //we're retreiveing the userID with httpContext 
+        //we're retreiveing the userID with httpContext. This only works when the user is signed in.
         private readonly IHttpContextAccessor _httpContext;
         public UserService(IHttpContextAccessor httpContext)
         {
