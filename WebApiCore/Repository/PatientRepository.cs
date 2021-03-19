@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
+using WebApiCore.Services;
 
 namespace WebApiCore.Repository
 {
@@ -18,10 +19,12 @@ namespace WebApiCore.Repository
     public class PatientRepository : IPatientRepository
     {
         private readonly IConfiguration _config;
+        private readonly IUserService _userService;
 
-        public PatientRepository(IConfiguration configuration)
+        public PatientRepository(IConfiguration configuration, IUserService userService)
         {
             _config = configuration;
+            _userService = userService;
         }
 
         private IDbConnection Connection
@@ -83,13 +86,15 @@ namespace WebApiCore.Repository
         /// </summary>
         /// <param name="practitionerId">Id of specific practitioner</param>
         /// <returns>A list of patients that "belong" to the specified practitioner.</returns>
-        public async Task<IEnumerable<Patient>> GetAllById(int practitionerId)
+        public async Task<IEnumerable<Patient>> GetAllById(int userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var result = await conn.QueryAsync<Practitioner>("dbo.spGetAllPatients", new { PractitionerID = practitionerId },
+                var pracID = _userService.GetUserId();
+                var result = await conn.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = pracID },
                    commandType: CommandType.StoredProcedure);
                 return (List<Patient>)result;
+                //return result.ToList();
             }
         }
 
