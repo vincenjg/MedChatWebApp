@@ -12,7 +12,7 @@ namespace WebApiCore.Repository
 
         //Task<Appointment> Get(string email, string password);
 
-        Task<IEnumerable<Appointment>> GetAllByPractitionerId(int practitionerId);
+        Task<IEnumerable<Appointment>> GetAllByPractitionerId(int userId);
 
         Task<IEnumerable<Appointment>> GetAllByPatientId(int patientId);
 
