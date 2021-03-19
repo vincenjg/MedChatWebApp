@@ -43,7 +43,7 @@ namespace WebApiCore
             //services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ITemplateRepository, TemplateRepository>();
-
+            services.AddScoped<IUserService, UserService>();
             services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
             services.AddTransient<IUserStore<Practitioner>, UserStore>();
             services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 

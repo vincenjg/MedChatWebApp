@@ -5,29 +5,35 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Models;
 using WebApiCore.Repository;
+using WebApiCore.Services;
 
 namespace WebApiCore.Controllers
 {
-    public class AppointmentsView : Controller
+    public class AppointmentsViewController : Controller
     {
 
         private readonly IAppointmentRepository _appointments;
+        private readonly IUserService _userService;
 
-        public AppointmentsView(IAppointmentRepository appointments)
+        public AppointmentsViewController(IAppointmentRepository appointments, IUserService userService)
         {
             _appointments = appointments;
+            _userService = userService;
         }
 
         //view all appointments. 
         public async Task<IActionResult> Index()
         {
-            return View(await _appointments.GetAll());
+            /*return View(await _appointments.GetAll());*/
+            var userID = _userService.GetUserId();
+            return View(await _appointments.GetAllByPractitionerId(0));
         }
 
         //test to view only appointments based on a practitioner's ID
         public async Task<IActionResult> GetPrac()
         {
-            return View(await _appointments.GetAllByPractitionerId(31));
+            var userID = _userService.GetUserId();
+            return View(await _appointments.GetAllByPractitionerId(0));
         }
 
         public async Task<IActionResult> Details(int? id)
