@@ -4,7 +4,6 @@ using WebApiCore.Options;
 using WebApiCore.Services;
 using WebApiCore.Repository;
 using System.Linq;
-using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,42 +29,46 @@ namespace WebApiCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //adding signal R
-            services.AddSignalR(Options => Options.EnableDetailedErrors = true)
-                .AddMessagePackProtocol();
+            // MVC and Blazor 
+            services.AddControllersWithViews()
+                 .AddNewtonsoftJson();
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+            services.AddServerSideBlazor();
 
-            // add TwilioService
+            // Settings
             services.Configure<TwilioSettings>(settings =>
             {
                 settings.AccountSid = Configuration.GetSection("Secrets").GetSection("TWILIO_ACCOUNT_SID").Value;
                 settings.ApiSecret = Configuration.GetSection("Secrets").GetSection("TWILIO_API_SECRET").Value;
                 settings.ApiKey = Configuration.GetSection("Secrets").GetSection("TWILIO_API_KEY").Value;
             });
-            services.AddSingleton<TwilioService>();
 
-            services.AddControllersWithViews()
-                .AddNewtonsoftJson();
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-
+            // HttpClients
             services.AddHttpClient("ComponentsClient", client =>
             {
-                client.BaseAddress = new Uri("https://localhost:44361"); ;
+                client.BaseAddress = new Uri("https://localhost:44361");
             });
 
             //data context connection setup with dapper
             services.AddDbContext<WebAPICoreContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            // Services and Repositories
+            services.AddSingleton<TwilioService>();
+            services.AddSingleton<ILobbyService, LobbyService>();
+
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+
+            services.AddSignalR(Options => Options.EnableDetailedErrors = true)
+               .AddMessagePackProtocol();
 
             services.AddResponseCompression(opts =>
                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
                    new[] { "application/octet-stream" }
                    )
                );
-
-            //services.AddHttpClient<HttpClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,6 +104,10 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "MyArea",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
@@ -109,7 +116,7 @@ namespace WebApiCore
                 endpoints.MapBlazorHub();
 
                 //for signalR - a route for the Hub that our clients will connect to (right before UseMvc):
-                endpoints.MapHub<ChatHub>(HubEndpoints.LobbyHub);
+                endpoints.MapHub<LobbyHub>(HubEndpoints.LobbyHub);
                 endpoints.MapHub<NotificationHub>(HubEndpoints.NotificationHub);
             });
 

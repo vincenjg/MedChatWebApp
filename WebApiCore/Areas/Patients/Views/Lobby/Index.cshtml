@@ -1,0 +1,90 @@
+﻿@model PatientLobbyViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/carousel.css" />
+    <style>
+        .card {
+            text-align: center;
+            border: 1px solid #D9D7DA;
+            padding: 12px;
+        }
+        .card-img-top{
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+            background-color: #ffffff;
+        }
+    </style>
+}
+
+@Html.AntiForgeryToken()
+
+<div class="container">
+    <!--display list of associated practitioners-->
+    <div class="card-group">
+        @foreach (Practitioner practitioner in Model.Practitioners)
+        {
+            string bacgroundColorStyle = practitioner.IsOnline ? "bg-success" : "bg-secondary";
+
+            <div class="card @bacgroundColorStyle" style="max-width: 18rem;">
+                <img class="card-img-top card-header rounded-circle z-depth-2" src="~/imgs/icon.png" alt="card image cap" />
+                <div class="card-body">
+                    <h5 class="card-title" style="text-align: center;">@practitioner.FullName</h5>
+                    <p class="card-text" style="text-align: center;">@practitioner.Title</p>
+                </div>
+            </div>
+        }
+    </div>
+
+
+        @*<div class="owl-carousel owl-theme">
+            <div class="owl-carousel-item">
+                <div class="carousel-item-image">
+                    <img src="~/imgs/icon.png" class="item-image" />
+                </div>
+                <div class="carousel-item-text">
+                    <span class="item-kicker">Practitioner Name</span>
+                    <h3 class="item-title">MD</h3>
+                </div>
+            </div>
+        </div>*@
+        <hr />
+        <!--show dropdown of online practitioners to chose a lobby-->
+        @*<div class="container">
+                <select asp-for="SelectedPractitioner" asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.FullName))">
+                    <option value="">Choose a Practitioner's lobby</option>
+                </select>
+            </div>*@
+    </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <script>
+        $('.owl-carousel').owlCarousel({
+            loop: true,
+            margin: 30,
+            dots: true,
+            nav: false,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 2,
+                    margin: 10,
+                    stagePadding: 20,
+                },
+                600: {
+                    items: 3,
+                    margin: 20,
+                    stagePadding: 50,
+                },
+                1000: {
+                    items: 4
+                }
+            }
+        });
+    </script>
+}

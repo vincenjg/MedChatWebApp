@@ -127,5 +127,18 @@ namespace WebApiCore.Repository
                 return affectedRows;
             }
         }
+
+        public async Task<int> ChangeStatus(PractitionerStatus practitionerStatus)
+        {
+            var sql = @"UPDATE Practitioners
+                        SET IsOnline = @isOnline
+                        WHERE PractitionerId = @id";
+
+            using (IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, practitionerStatus);
+                return affectedRows;
+            }
+        }
     }
 }

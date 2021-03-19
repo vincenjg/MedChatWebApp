@@ -24,7 +24,6 @@ namespace WebApiCore.Components
         protected NavigationManager NavigationManager { get; set; } = null!;
 
         [Inject]
-        //protected HttpClient _client { get; set; } = null!;
         protected IHttpClientFactory HttpClientFactory { get; set; } = null!;
 
         List<RoomDetails> _rooms = new List<RoomDetails>();

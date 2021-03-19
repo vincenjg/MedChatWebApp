@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
-        "ConnectionStrings:DefaultConnection": "Data Source=DESKTOP-QIU6SUE\\\\SQLEXPRESS;Initial Catalog=SD;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
+        "ConnectionStrings:DefaultConnection": "Data Source=DESKTOP-0M3N5TR\\SQLEXPRESS;Initial Catalog=SDIntegrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
         "ConnectionStrings:TestString": "Test conn string overwritten",
         "ASPNETCORE_ENVIRONMENT": "Development",
         "Secrets__TEST_VAR": "ENV var retrieved"
