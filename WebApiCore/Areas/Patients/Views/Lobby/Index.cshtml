@@ -23,7 +23,6 @@
 
 @Html.AntiForgeryToken()
 
-<div class="container">
     <!--display list of associated practitioners-->
     <div class="card-group">
         @foreach (Practitioner practitioner in Model.Practitioners)
@@ -55,11 +54,10 @@
         <hr />
         <!--show dropdown of online practitioners to chose a lobby-->
         @*<div class="container">
-                <select asp-for="SelectedPractitioner" asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.FullName))">
-                    <option value="">Choose a Practitioner's lobby</option>
-                </select>
-            </div>*@
-    </div>
+            <select asp-for="SelectedPractitioner" asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.FullName))">
+                <option value="">Choose a Practitioner's lobby</option>
+            </select>
+        </div>*@
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>

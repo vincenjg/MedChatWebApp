@@ -24,10 +24,12 @@ namespace WebApiCore.Areas.Patients.Controllers
 
         public async Task<IActionResult> IndexAsync()
         {
-            patientLobbyVM = new PatientLobbyViewModel()
+            patientLobbyVM = new PatientLobbyViewModel("https://localhost:44361/")
             {
-                Practitioners = (List<Practitioner>)await _practitionerRepository.GetAllById(1)
+                //Practitioners = (List<Practitioner>)await _practitionerRepository.GetAllById(1)
             };
+
+            await patientLobbyVM.ConfigureHub();
 
             return View(patientLobbyVM);
         }

@@ -17,7 +17,7 @@ namespace WebApiCore.Areas.Practitoners.Views.Lobby
 {
     public class PractitionerLobbyViewModel : PageModel
     {
-        private HubConnection? _hubConnection;
+        private HubConnection? _hubConnection { get; set; }
 
         protected IHttpClientFactory _clientFactory { get; set; } = null!;
 
@@ -93,8 +93,8 @@ namespace WebApiCore.Areas.Practitoners.Views.Lobby
 
         public async Task ConfigureHub()
         {
-            await _hubConnection.StartAsync();
             _hubConnection.On(HubEndpoints.JoinLobby, UpdateLobbyPatientList);
+            await _hubConnection.StartAsync();
         }
     }
 }
