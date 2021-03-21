@@ -29,7 +29,8 @@ namespace WebApiCore.Controllers
         {
             //TemplateModel htmlInfo = JsonConvert.DeserializeObject<TemplateModel>(data2);
             var userID = _userService.GetUserId();
-             _templates.SendTemplateData(data, userID);
+            data.PractitionerID = userID;
+             _templates.SendTemplateData(data);
             return Json(new { Message = "Success" });
         }
 

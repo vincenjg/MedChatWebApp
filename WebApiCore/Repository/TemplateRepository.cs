@@ -30,16 +30,15 @@ namespace WebApiCore.Repository
             }
         }
         //this method is used to send the template data to the database
-        public async Task<int> SendTemplateData(TemplateModel htmlTemplate, string userID)
+        public async Task<int> SendTemplateData(TemplateModel htmlTemplate)
         {
-            
+
             //var sql = @"INSERT INTO Templates (TemplateName, TemplateData) VALUES (@TemplateName, @TemplateData)";
             var sql = @"INSERT INTO Templates (TemplateName, TemplateData, PractitionerID) VALUES (@TemplateName, @TemplateData, @PractitionerID)";
 
 
             using (IDbConnection conn = Connection)
-            {
-                //var userID = _userService.GetUserId();
+            {                
                 var affectedRows = await conn.ExecuteAsync(sql, htmlTemplate);
                 return affectedRows;
             }
@@ -75,8 +74,9 @@ namespace WebApiCore.Repository
         //this is used to bind the dropdown list with the TemplateName column.
         public IEnumerable<TemplateModel> GetTemplateList()
         {
-            string query = @"Select TemplateID, TemplateName FROM Templates";
-            var result = Connection.Query<TemplateModel>(query);
+            var userID = _userService.GetUserId();
+            string sql = @"Select TemplateID, TemplateName FROM Templates WHERE PractitionerID = @PractitionerID";
+            var result = Connection.Query<TemplateModel>(sql, new { PractitionerID = userID });
             return result;
         }
 
