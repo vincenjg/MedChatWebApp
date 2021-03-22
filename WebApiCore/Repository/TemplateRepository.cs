@@ -26,7 +26,7 @@ namespace WebApiCore.Repository
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
         //this method is used to send the template data to the database

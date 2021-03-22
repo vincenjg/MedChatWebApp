@@ -23,7 +23,7 @@ namespace WebApiCore.Controllers
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
         public IActionResult Index()

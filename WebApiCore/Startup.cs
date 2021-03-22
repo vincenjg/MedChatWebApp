@@ -54,7 +54,7 @@ namespace WebApiCore
             services.AddSignalR(Options => Options.EnableDetailedErrors = true);
 
             // add data layer dependencies
-            /* var dbConnection = Configuration.GetSection("TestConnection");
+            /* var dbConnection = Configuration.GetSection("DefaultConnection");
              services.Configure<ConnectionStrings>(dbConnection);
              services.AddDataAccess();*/
             services.AddMvc();
