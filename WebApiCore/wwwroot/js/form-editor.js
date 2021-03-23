@@ -31,6 +31,7 @@
     document.getElementById("loadData")
         .addEventListener("click", () => {
 
+            $("#mainForm").remove();
             var formId = document.getElementById("Dropdown1").value;
             //var dataToGet = JSON.stringify(formId);
             console.log(formId);

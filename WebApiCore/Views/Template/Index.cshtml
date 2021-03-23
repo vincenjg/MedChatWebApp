@@ -7,32 +7,28 @@
 @*<div id="fb-editor"></div>
 *@
 
-<tr>
-    <td>
-        <div class="editor-label">
-            @Html.Label("Select Template From the List")
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">Select Template From the List: </div>
+        <div class="col-lg-3">
+            @Html.DropDownList("Dropdown1", ViewBag.TemplateList as SelectList, new { @class = "btn btn-secondary dropdown-toggle" })
         </div>
-    </td>
-    <td>
-        <div>
-            <div class="col-md-2">
-                @Html.DropDownList("Dropdown1", ViewBag.TemplateList as SelectList)
-            </div>
-            <div class="col-md-2">
-                <button id="loadData" type="button">Load</button>
-            </div>
+        <div class="col-lg-3">
+            <button id="loadData" type="button" class="btn btn-primary">Load Template</button>
         </div>
-    </td>
-</tr>
-<br />
+    </div>
+</div>
+
 <br />
 @*This will be used to save Custom forms that user can build for different scenarios.*@
-<form id="build-wrap">
-    <div class="SaveDataWrap">
-        <input id="nameInput" type="text" name="TemplateName" />
-        <button id="saveData" type="button">Save Form</button>
-    </div>
-</form>
+<div id="mainForm" class="container">
+    <form id="build-wrap">
+        <div class="SaveDataWrap">
+            <input id="nameInput" type="text" name="TemplateName" />
+            <button id="saveData" type="button" class="btn btn-primary">Save Template</button>
+        </div>
+    </form>
+</div>
 <br />
 <br />
 @*This will be used to save whatever the user loaded into the screen and worked on*@
@@ -40,7 +36,7 @@
 </form>
 <div class="SaveDataWrap">
     <input id="dataInput" type="text" name="TemplateName" />
-    <button id="saveForm" type="button">Save Rendered Form</button>
+    <button id="saveForm" type="button" class="btn btn-primary">Save Rendered Form</button>
 </div>
 
 
@@ -48,6 +44,8 @@
 
     <script src="~/js/form-editor.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    
+
     @*<script src="~/js/senddata.js"></script>*@
 
 }

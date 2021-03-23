@@ -89,7 +89,7 @@ namespace WebApiCore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Template}/{action=Index}/{id?}");
 
                 //to be added ... this is for URLs
                 endpoints.MapRazorPages();

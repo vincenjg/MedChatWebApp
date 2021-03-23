@@ -40,12 +40,5 @@ namespace WebApiCore.Controllers
             return temp.TemplateData;
         }
 
-        /*        [HttpGet]
-                public ActionResult GetTemplateData(int dataId)
-                {
-                    _templates.GetById(dataId);
-                    return Json(new { Message = "Nice" });
-                }*/
-
     }
 }

@@ -74,9 +74,11 @@ namespace WebApiCore.Repository
         //this is used to bind the dropdown list with the TemplateName column.
         public IEnumerable<TemplateModel> GetTemplateList()
         {
-            var userID = _userService.GetUserId();
-            string sql = @"Select TemplateID, TemplateName FROM Templates WHERE PractitionerID = @PractitionerID";
-            var result = Connection.Query<TemplateModel>(sql, new { PractitionerID = userID });
+            //var userID = _userService.GetUserId();
+            //string sql = @"Select TemplateID, TemplateName FROM Templates WHERE PractitionerID = @PractitionerID";
+            //var result = Connection.Query<TemplateModel>(sql, new { PractitionerID = userID });
+            string sql = @"Select TemplateID, TemplateName FROM Templates";
+            var result = Connection.Query<TemplateModel>(sql);
             return result;
         }
 
