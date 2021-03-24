@@ -38,7 +38,7 @@ namespace WebApiCore.Controllers
         }
 
         [HttpGet(nameof(GetAllPractitionerById))]
-        public async Task<IEnumerable<Appointment>> GetAllPractitionerById(int id)
+        public async Task<IEnumerable<Appointment>> GetAllPractitionerById(string id)
         {
             List<Appointment> appointments = (List<Appointment>)await _appointments.GetAllByPractitionerId(id);
             return appointments;

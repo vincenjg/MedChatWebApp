@@ -40,7 +40,7 @@ namespace WebApiCore
 
             //data context connection setup with dapper            
             services.AddScoped<IPatientRepository, PatientRepository>();
-            //services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ITemplateRepository, TemplateRepository>();
             services.AddScoped<IUserService, UserService>();
@@ -89,7 +89,7 @@ namespace WebApiCore
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Template}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 //to be added ... this is for URLs
                 endpoints.MapRazorPages();

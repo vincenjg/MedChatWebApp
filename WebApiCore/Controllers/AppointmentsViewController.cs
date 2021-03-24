@@ -25,15 +25,15 @@ namespace WebApiCore.Controllers
         public async Task<IActionResult> Index()
         {
             /*return View(await _appointments.GetAll());*/
-            //var userID = _userService.GetUserId();
-            return View(await _appointments.GetAllByPractitionerId(0));
+            var userId = _userService.GetUserId();
+            return View(await _appointments.GetAllByPractitionerId(userId));
         }
 
         //test to view only appointments based on a practitioner's ID
         public async Task<IActionResult> GetPrac()
         {
-            var userID = _userService.GetUserId();
-            return View(await _appointments.GetAllByPractitionerId(0));
+            var userId = _userService.GetUserId();
+            return View(await _appointments.GetAllByPractitionerId(userId));
         }
 
         public async Task<IActionResult> Details(int? id)

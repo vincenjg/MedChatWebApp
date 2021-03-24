@@ -95,12 +95,11 @@ namespace WebApiCore.Repository
         }
         //get all appointments based on practitioner
         //create stored procedure spGetALlAppointments to retreive all appointments under a practitioner?
-        public async Task<IEnumerable<Appointment>> GetAllByPractitionerId(int userId)
+        public async Task<IEnumerable<Appointment>> GetAllByPractitionerId(string userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var userID = _userService.GetUserId();
-                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPractitionerId", new { PractitionerId = userID },
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPractitionerId", new { PractitionerId = userId },
                    commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

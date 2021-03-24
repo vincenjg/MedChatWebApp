@@ -100,6 +100,17 @@ namespace WebApiCore.Repository
             }
         }
 
+        //Get patient information based on signed in information:
+        public async Task<IEnumerable<Practitioner>> GetPractitionerInfo(string userId)
+        {
+            var sql = @"SELECT FirstName, LastName, Title, EmailAddress, PhoneNumber FROM Practitioners WHERE PractitionerID = @PractitionerId";
+            using(IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Practitioner>(sql, new { PractitionerId = userId });
+                return result.ToList();
+            }
+        }
+
         /// <summary>
         /// Return all practitioners associated with a specific patients.
         /// </summary>
