@@ -30,29 +30,18 @@ namespace WebApiCore
         public void ConfigureServices(IServiceCollection services)
         {
             // MVC and Blazor 
-            services.AddControllersWithViews()
-                 .AddNewtonsoftJson();
-            services.AddRazorPages()
-                .AddRazorRuntimeCompilation();
+            services.AddMvc();
+            services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
 
             // Settings
             services.Configure<TwilioSettings>(settings =>
             {
-                settings.AccountSid = Configuration.GetSection("Secrets").GetSection("TWILIO_ACCOUNT_SID").Value;
-                settings.ApiSecret = Configuration.GetSection("Secrets").GetSection("TWILIO_API_SECRET").Value;
-                settings.ApiKey = Configuration.GetSection("Secrets").GetSection("TWILIO_API_KEY").Value;
+                settings.AccountSid = Configuration.GetSection("Secrets").GetSection("TwilioAccountSid").Value;
+                settings.ApiSecret = Configuration.GetSection("Secrets").GetSection("TwilioAPiSecret").Value;
+                settings.ApiKey = Configuration.GetSection("Secrets").GetSection("TwilioApiKey").Value;
             });
-
-            // HttpClients
-            services.AddHttpClient("ComponentsClient", client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:44361");
-            });
-
-            //data context connection setup with dapper
-            services.AddDbContext<WebAPICoreContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             // Services and Repositories
             services.AddSingleton<TwilioService>();
@@ -63,6 +52,17 @@ namespace WebApiCore
 
             services.AddSignalR(Options => Options.EnableDetailedErrors = true)
                .AddMessagePackProtocol();
+
+            services.AddDbContext<WebAPICoreContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"));
+            });
+
+            // HttpClients
+            services.AddHttpClient("ComponentsClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44361");
+            });
 
             services.AddResponseCompression(opts =>
                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(

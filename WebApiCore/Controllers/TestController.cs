@@ -25,17 +25,30 @@ namespace WebApiCore.Controllers
             return testString;
         }
 
-        [HttpGet("GetTestEnv")]
+        [HttpGet("GetAzureConnString")]
         public string GetTestEnvVariable()
         {
-            string testEnv = _config.GetSection("Secrets").GetValue<string>("TEST_VAR");
-            return testEnv;
+            string azureConnString = _config.GetConnectionString("DefaultConnection");
+
+            if (string.IsNullOrEmpty(azureConnString))
+            {
+                return "could not retrieve azureConnString from azure";
+            }
+
+            return "retrieved azureConnString from azure";
         }
 
-        [HttpGet("TestRoute")]
+        [HttpGet("TesTwilioSecrets")]
         public string TestRoute()
         {
-            return "this worked";
+            string twilio1 = _config.GetValue<string>("Secrets:TwilioAccountSid");
+
+            if (string.IsNullOrEmpty(twilio1))
+            {
+                return "could not retrieve twilio secrets from azure";
+            }
+
+            return "retrieved twilio secrets from azure";
         }
     }
 }
