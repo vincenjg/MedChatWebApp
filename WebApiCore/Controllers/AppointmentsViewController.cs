@@ -27,6 +27,11 @@ namespace WebApiCore.Controllers
             /*return View(await _appointments.GetAll());*/
             var userId = _userService.GetUserId();
             return View(await _appointments.GetAllByPractitionerId(userId));
+
+        }
+        public async Task<IActionResult> PatientIndex()
+        {
+            return View(await _appointments.GetAllByPatientId(5));
         }
 
         //test to view only appointments based on a practitioner's ID
