@@ -15,13 +15,9 @@ namespace WebApiCore.Models.AccountViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-/*        [Required]
+        [Required]
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
-        public string Title { get; set; }
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }*/
     }
 }
