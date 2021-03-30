@@ -7,22 +7,24 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
+using WebApiCore.Services;
 
 namespace WebApiCore.Repository
 {
     public class AppointmentRepository : IAppointmentRepository
     {
         private readonly IConfiguration _config;
-
-        public AppointmentRepository(IConfiguration configuration)
+        private readonly IUserService _userService;
+        public AppointmentRepository(IConfiguration configuration, IUserService userService)
         {
             _config = configuration;
+            _userService = userService;
         }
         private IDbConnection Connection
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -93,11 +95,11 @@ namespace WebApiCore.Repository
         }
         //get all appointments based on practitioner
         //create stored procedure spGetALlAppointments to retreive all appointments under a practitioner?
-        public async Task<IEnumerable<Appointment>> GetAllByPractitionerId(int practitionerId)
+        public async Task<IEnumerable<Appointment>> GetAllByPractitionerId(string userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPractitionerId", new { PractitionerId = practitionerId },
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPractitionerId", new { PractitionerId = userId },
                    commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }

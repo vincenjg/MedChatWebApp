@@ -99,7 +99,7 @@ namespace WebApiCore.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new Practitioner { UserName = model.EmailAddress, EmailAddress = model.EmailAddress };
+                var user = new Practitioner { UserName = model.EmailAddress, EmailAddress = model.EmailAddress, FirstName = model.FirstName, LastName = model.LastName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

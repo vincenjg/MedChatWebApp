@@ -11,15 +11,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using WebApiCore.Models;
+using WebApiCore.Repository;
 using WebApiCore.Services;
 
 namespace WebApiCore.Controllers
 {
     public class ManageController : Controller
     {
-        public IActionResult Index()
+        private readonly IPractitionerRepository _practitioner;
+        private readonly IUserService _userService;
+
+        public ManageController(IPractitionerRepository practitioner, IUserService userService)
         {
-            return View();
+            _practitioner = practitioner;
+            _userService = userService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var userId = _userService.GetUserId();
+            return View(await _practitioner.GetPractitionerInfo(userId));
         }
     }
 }

@@ -31,7 +31,7 @@ namespace WebApiCore.Controllers
             return practitioner;
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet(nameof(GetById))]
         public async Task<Practitioner> GetById(int id)
         {
             Practitioner practitioner = await _practitioners.Get(id);

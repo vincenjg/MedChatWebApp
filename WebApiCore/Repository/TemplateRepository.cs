@@ -7,35 +7,38 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
+using WebApiCore.Services;
 
 namespace WebApiCore.Repository
 {
     public class TemplateRepository : ITemplateRepository
     {
 
-        private readonly IConfiguration _config;    
+        private readonly IConfiguration _config;
+        private readonly IUserService _userService;
 
-        public TemplateRepository(IConfiguration configuration)
+        public TemplateRepository(IConfiguration configuration, IUserService userService)
         {
             _config = configuration;
+            _userService = userService;
         }
         private IDbConnection Connection
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
         //this method is used to send the template data to the database
         public async Task<int> SendTemplateData(TemplateModel htmlTemplate)
         {
-            var sql = @"INSERT INTO Templates (TemplateName, TemplateData) VALUES (@TemplateName, @TemplateData)";
 
-            /*            var m = htmlTemplate;
-                        Console.WriteLine(htmlTemplate);
-                        return View();*/
+            //var sql = @"INSERT INTO Templates (TemplateName, TemplateData) VALUES (@TemplateName, @TemplateData)";
+            var sql = @"INSERT INTO Templates (TemplateName, TemplateData, PractitionerID) VALUES (@TemplateName, @TemplateData, @PractitionerID)";
+
+
             using (IDbConnection conn = Connection)
-            {
+            {                
                 var affectedRows = await conn.ExecuteAsync(sql, htmlTemplate);
                 return affectedRows;
             }
@@ -71,8 +74,11 @@ namespace WebApiCore.Repository
         //this is used to bind the dropdown list with the TemplateName column.
         public IEnumerable<TemplateModel> GetTemplateList()
         {
-            string query = @"Select TemplateID, TemplateName FROM Templates";
-            var result = Connection.Query<TemplateModel>(query);
+            var userID = _userService.GetUserId();
+            string sql = @"Select TemplateID, TemplateName FROM Templates WHERE PractitionerID = @PractitionerID";
+            var result = Connection.Query<TemplateModel>(sql, new { PractitionerID = userID });
+            //string sql = @"Select TemplateID, TemplateName FROM Templates";
+            //var result = Connection.Query<TemplateModel>(sql);
             return result;
         }
 

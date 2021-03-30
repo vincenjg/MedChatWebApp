@@ -13,8 +13,9 @@ namespace WebApiCore.Models
 
         public int TemplateID { get; set; }
         public string TemplateName { get; set; }
-
         public string TemplateData { get; set; }
+        public string PractitionerID { get; set; }
+        public string TestID { get; set; }
         [NotMapped]
         public SelectList DropDownList { get; set; }
 

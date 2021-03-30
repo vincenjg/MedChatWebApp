@@ -29,5 +29,20 @@ namespace WebApiCore.Controllers
         {
             return View(await _practitioner.GetAll());
         }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var patient = await _practitioner.Get(id.GetValueOrDefault());
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return View(patient);
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace WebApiCore.Repository
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("TestConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -96,6 +96,17 @@ namespace WebApiCore.Repository
             using(IDbConnection conn = Connection)
             {
                 var result = await conn.QueryAsync<Practitioner>(sql);
+                return result.ToList();
+            }
+        }
+
+        //Get patient information based on signed in information:
+        public async Task<IEnumerable<Practitioner>> GetPractitionerInfo(string userId)
+        {
+            var sql = @"SELECT FirstName, LastName, Title, EmailAddress, PhoneNumber FROM Practitioners WHERE PractitionerID = @PractitionerId";
+            using(IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Practitioner>(sql, new { PractitionerId = userId });
                 return result.ToList();
             }
         }

@@ -40,10 +40,10 @@ namespace WebApiCore
 
             //data context connection setup with dapper            
             services.AddScoped<IPatientRepository, PatientRepository>();
-            //services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ITemplateRepository, TemplateRepository>();
-
+            services.AddScoped<IUserService, UserService>();
             services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
             services.AddTransient<IUserStore<Practitioner>, UserStore>();
             services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 
@@ -54,7 +54,7 @@ namespace WebApiCore
             services.AddSignalR(Options => Options.EnableDetailedErrors = true);
 
             // add data layer dependencies
-            /* var dbConnection = Configuration.GetSection("TestConnection");
+            /* var dbConnection = Configuration.GetSection("DefaultConnection");
              services.Configure<ConnectionStrings>(dbConnection);
              services.AddDataAccess();*/
             services.AddMvc();
