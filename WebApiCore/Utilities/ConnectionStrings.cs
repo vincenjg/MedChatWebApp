@@ -7,6 +7,6 @@ namespace WebApiCore.Utilities
 {
     public class ConnectionStrings
     {
-        public string TestConnection { get; set; }
+        public string DefaultConnection { get; set; }
     }
 }
