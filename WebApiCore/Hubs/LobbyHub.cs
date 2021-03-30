@@ -19,10 +19,10 @@ namespace WebApiCore.Hubs
             await Groups.AddToGroupAsync(Context.ConnectionId, lobbyName);
         }
 
-        public async Task JoinLobby(string lobbyName, int lobbyCount)
+        public async Task JoinLobby(string lobbyName, string lobbyMessage)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, lobbyName);
-            await Clients.Group(lobbyName).SendAsync("ReceiveMessage", $"There are now {lobbyCount} in the Lobby.");
+            await Clients.Group(lobbyName).SendAsync("ReceiveMessage", lobbyMessage);
         }
 
         public async Task LeaveLobby(string lobbyName, int lobbyCount)

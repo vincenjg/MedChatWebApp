@@ -58,37 +58,43 @@ namespace WebApiCore.Areas.Practitoners.Views.Lobby
 
             // use practitioner name
             string lobbyName = "lobby name";
-            PractitionerStatus status = new PractitionerStatus
+            PractitionerStatus newStatus = new PractitionerStatus
             {
                 id = 1,
                 isOnline = IsOnline
             };
-
-            var content = new StringContent(JsonConvert.SerializeObject(new { lobbyName, status}), Encoding.UTF8, "application/json");
+            var json = JsonConvert.SerializeObject(new { lobbyName = lobbyName, status = newStatus });
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
             var client = _clientFactory.CreateClient("ComponentsClient");
 
-            await client.PostAsync("api/lobby/changestatus", content);
-            await _hubConnection.InvokeAsync(HubEndpoints.ChangeStatus, lobbyName, status);
+            await client.PostAsync("api/Lobby/ChangeStatus", content);
+            await _hubConnection.InvokeAsync(HubEndpoints.ChangeStatus, lobbyName, newStatus);
 
             // create lobby if status is changed to online or destroy it if status is changed to offline.
             if (IsOnline)
             {
-                await CreateLobby();
+                await CreateLobby(lobbyName, client);
             }
             else
             {
-                await DestroyLobby();
+                await DestroyLobby(lobbyName, client);
             }
          }
 
-        public async Task CreateLobby()
+        public async Task CreateLobby(string lobbyName, HttpClient client)
         {
+            var content = new StringContent(lobbyName, Encoding.UTF8, "application/json");
+            await client.PostAsync("api/Lobby/CreateLobby", content);
+
             await _hubConnection.InvokeAsync(HubEndpoints.CreatLobby, "lobby name");
         }
 
-        public async Task DestroyLobby()
+        public async Task DestroyLobby(string lobbyName, HttpClient client)
         {
-            await _hubConnection.InvokeAsync(HubEndpoints.DestroyLobby, "lobby name");
+            var content = new StringContent(lobbyName, Encoding.UTF8, "application/json");
+            await client.PostAsync("api/Lobby/DestroyLobby", content);
+
+            await _hubConnection.InvokeAsync(HubEndpoints.DestroyLobby, lobbyName);
         }
 
         public async Task ConfigureHub()

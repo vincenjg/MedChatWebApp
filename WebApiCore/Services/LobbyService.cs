@@ -1,6 +1,3 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using WebApiCore.Models;
 using WebApiCore.Options;
 using WebApiCore.Repository;
@@ -47,7 +46,7 @@ namespace WebApiCore.Services
 
             lobby.Patients.Add(patient);
 
-            string joinMessage = $"There are now {lobby.Patients.Count} in the Lobby.";
+            string joinMessage = $"There are now {lobby.Patients.Count} patients in the Lobby.";
             return joinMessage;
         }
 
@@ -79,10 +78,11 @@ namespace WebApiCore.Services
 
         public async Task<int> ChangeStatus(string lobbyName, PractitionerStatus status)
         {
-            var json = new StringContent(JsonConvert.SerializeObject(status), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/practitioner/changestatus", json);
-            int returnValue = await response.Content.ReadFromJsonAsync<int>();
-            return returnValue;
+            //TODO: should I keep the lobbyService a singleton? If so, is using a HttpClient the best way to do this?
+            var content = new StringContent(JsonConvert.SerializeObject(status), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/Practitioner/ChangeStatus", content);
+            var affectedRows = await response.Content.ReadFromJsonAsync<int>();
+            return affectedRows;
         }
     }
 }
