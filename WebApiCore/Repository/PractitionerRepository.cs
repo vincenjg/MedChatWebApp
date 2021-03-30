@@ -7,11 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using WebApiCore.Models;
-
+using Microsoft.AspNetCore.Identity;
+using System.Threading;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiCore.Repository
 {
-
     public class PractitionerRepository : IPractitionerRepository
     {
         private readonly IConfiguration _config;
@@ -30,6 +31,32 @@ namespace WebApiCore.Repository
             }
         }
 
+        /// <summary>
+        /// The following methods will be used to enable the creation of practitioner accounts.         
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IdentityResult> CreateAsync(Practitioner user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (IDbConnection conn = Connection)
+            {
+                //await conn.OpenAsync(cancellationToken);
+                user.PractitionerID = await conn.QuerySingleAsync<int>($@"INSERT INTO Practitioners (FirstName, LastName, Title, EmailAddress, TestPassword) 
+                                                                        VALUES (@FirstName, @LastName, @Title, @EmailAddress, @TestPassword);
+                                                                        SELECT CAST(SCOPE_IDENTITY() as int)", user);
+            }
+
+            return IdentityResult.Success;
+        }
+
+
+        /// <summary>
+        /// The following is for editing and adding practitioners manually. These actions aren't nececcarily used, unless by admin account possibly.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Practitioner> Get(int id)
         {
             var sql = @"SELECT PractitionerID AS Id,
@@ -70,6 +97,17 @@ namespace WebApiCore.Repository
             using(IDbConnection conn = Connection)
             {
                 var result = await conn.QueryAsync<Practitioner>(sql);
+                return result.ToList();
+            }
+        }
+
+        //Get patient information based on signed in information:
+        public async Task<IEnumerable<Practitioner>> GetPractitionerInfo(string userId)
+        {
+            var sql = @"SELECT FirstName, LastName, Title, EmailAddress, PhoneNumber FROM Practitioners WHERE PractitionerID = @PractitionerId";
+            using(IDbConnection conn = Connection)
+            {
+                var result = await conn.QueryAsync<Practitioner>(sql, new { PractitionerId = userId });
                 return result.ToList();
             }
         }

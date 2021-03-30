@@ -12,24 +12,22 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">EZ MedChat</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler title" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-lg-row-reverse">
                 <a class="navbar-brand" asp-area="Practitioners" asp-controller="Lobby" asp-action="Index">Practitioners Lobby</a>
                 <a class="navbar-brand" asp-area="Patients" asp-controller="Lobby" asp-action="Index">Patient Lobby</a>
                 <a class="navbar-brand" asp-area="" asp-controller="videoCall" asp-action="Index">Video Call</a>
-
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <!--This will show the logout and email/username (when it's setup) at the top when the user is signed in
-                    This will also show the login and register button at the top right-->
                     <partial name="_LoginPartial.cshtml" />
-
                 </div>
+
+                <!--</div>-->
             </div>
         </nav>
     </header>
@@ -41,7 +39,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - WebApiCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - WebApiCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="_framework/blazor.server.js"></script>
@@ -56,8 +54,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/twilioVideo.js"></script>
 
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

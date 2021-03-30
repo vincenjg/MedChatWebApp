@@ -7,45 +7,55 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApiCore.Models;
+using WebApiCore.Repository;
 
 namespace WebApiCore.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    public class AppointmentsController : ControllerBase
+    public class AppointmentsController : Controller
     {
-        private string _connectionString;
+        private readonly IAppointmentRepository _appointments;
 
-        public AppointmentsController(IConfiguration configuration)
+        public AppointmentsController(IAppointmentRepository appointments)
         {
-            _connectionString = configuration.GetConnectionString("TestConnection");
+            _appointments = appointments;
         }
 
         [HttpGet(nameof(GetById))]
-        public async Task<Appointment> GetById(int Id)
+        public async Task<Appointment> GetById(int id)
         {
-            /*var result = await Task.FromResult(_dapper.Get<Patient>($"SELECT PatientID AS Id, EpicId AS EpicId, FirstName, LastName, EmailAddress, TestPassword FROM Patients WHERE PatientID = {Id} ", null, commandType: CommandType.Text));
-            return result;*/
-            string sql = @"SELECT * FROM Appointments WHERE AppointmentId = @Id";
+            Appointment appointment = await _appointments.Get(id);
+            return appointment;
+        }
 
-            using (var connection = new SqlConnection(_connectionString))
-            {
 
-                var result = await connection.QueryAsync<Appointment>(sql, new { Id = Id });
-                return result.FirstOrDefault();
-            }
+        [HttpGet(nameof(GetAllPatientsById))]
+        public async Task<IEnumerable<Appointment>> GetAllPatientsById(int id)
+        {
+            List<Appointment> appointments = (List<Appointment>)await _appointments.GetAllByPatientId(id);
+            return appointments;
+        }
 
+        [HttpGet(nameof(GetAllPractitionerById))]
+        public async Task<IEnumerable<Appointment>> GetAllPractitionerById(string id)
+        {
+            List<Appointment> appointments = (List<Appointment>)await _appointments.GetAllByPractitionerId(id);
+            return appointments;
         }
 
         [HttpDelete(nameof(Delete))]
         public async Task<int> Delete(int id)
         {
-            var sql = @"DELETE * FROM Appointments WHERE AppointmentID = @Id";
+            int affectedRows = await _appointments.Delete(id);
+            return affectedRows;
+        }
 
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var affectedRows = await connection.ExecuteAsync(sql, new { Id = id });
-                return affectedRows;
-            }
+        [HttpPost(nameof(Add))]
+        public async Task<int> Add(Appointment appointment)
+        {
+            int affectedRows = await _appointments.Add(appointment);
+            return affectedRows;
         }
     }
 }

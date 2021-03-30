@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApiCore.Utilities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Http.Features;
@@ -35,6 +37,7 @@ namespace WebApiCore
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
 
+            //data context connection setup with dapper            
             // Settings
             services.Configure<TwilioSettings>(settings =>
             {
@@ -49,6 +52,12 @@ namespace WebApiCore
 
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<ITemplateRepository, TemplateRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddIdentity<Practitioner, PractitionerRoleModel>().AddDefaultTokenProviders();
+            services.AddTransient<IUserStore<Practitioner>, UserStore>();
+            services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 
 
             services.AddSignalR(Options => Options.EnableDetailedErrors = true)
                .AddMessagePackProtocol();
@@ -95,6 +104,9 @@ namespace WebApiCore
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+
+
             app.UseRouting();
             app.UseAuthorization();
             //registration
