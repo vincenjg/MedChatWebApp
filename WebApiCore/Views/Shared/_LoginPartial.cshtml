@@ -9,10 +9,19 @@
 <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+            <a class="nav-link text-dark title" asp-area="" asp-controller="Template" asp-action="Index">Template</a>
         </li>
         <li class="nav-item">
-            <button type="submit" class="btn btn-link navbar-btn navbar-link text-dark">Log out</button>
+            <a class="nav-link text-dark title" asp-area="" asp-controller="AppointmentsView" asp-action="Index">Appointment</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark title" asp-area="" asp-controller="PatientsView" asp-action="Index">Patients</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark title" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <button type="submit" class="btn btn-link navbar-btn navbar-link title">Log out</button>
         </li>
     </ul>
 </form> 
@@ -21,10 +30,10 @@ else
 {
 <ul class="nav navbar-nav navbar-right">
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+        <a class="nav-link text-dark title" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+        <a class="nav-link text-dark title" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
     </li>
 </ul>
 }

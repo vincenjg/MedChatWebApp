@@ -7,6 +7,22 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.navbar {
+    background-color: #3abcea;
+}
+
+.heading {
+    background-color: #3abcea;
+}
+
+.title {
+    color: #000000 !important;
+}
+
+a.title:hover, a.text-dark:focus {
+    color: #FFFFFF !important;
+}
+
 /* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
