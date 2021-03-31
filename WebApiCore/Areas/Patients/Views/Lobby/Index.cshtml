@@ -25,7 +25,7 @@
 <!--show dropdown of online practitioners to chose a lobby-->
 <div class="container">
     <select id="lobbySelect" asp-for="SelectedPractitioner"
-            asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.Id), nameof(Practitioner.FullName))">
+            asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.PractitionerID), nameof(Practitioner.FullName))">
         <option value="0">Choose a Practitioner's lobby</option>
     </select>
     <button class="btn btn-primary pull-right" id="leaveBtn" disabled>

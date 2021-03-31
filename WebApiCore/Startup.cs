@@ -3,19 +3,17 @@ using WebApiCore.Models;
 using WebApiCore.Options;
 using WebApiCore.Services;
 using WebApiCore.Repository;
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApiCore.Utilities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
 using System;
+using System.Linq;
 
 namespace WebApiCore
 {
@@ -62,12 +60,8 @@ namespace WebApiCore
             services.AddSignalR(Options => Options.EnableDetailedErrors = true)
                .AddMessagePackProtocol();
 
-            services.AddDbContext<WebAPICoreContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("LocalConnection"));
-            });
-
             // HttpClients
+            services.AddScoped<ComponentHttpClient>();
             services.AddHttpClient("ComponentsClient", client =>
             {
                 client.BaseAddress = new Uri("https://localhost:44361");
