@@ -139,14 +139,5 @@ namespace WebApiCore.Repository
             }
         }
 
-        //used to retrive patient emails associated with practitioner
-        public IEnumerable<Patient> GetpatientsList()
-        {
-            var userId = _userService.GetUserId();
-            //string sql = @"Select EmailAddress FROM Patients WHERE PatientID = @PatientID";
-            var result = Connection.QueryAsync<Patient>("dbo.spGetAllPatientByPracId", new { PractitionerID = userId },
-                   commandType: CommandType.StoredProcedure);
-            return result;
-        }
     }
 }
