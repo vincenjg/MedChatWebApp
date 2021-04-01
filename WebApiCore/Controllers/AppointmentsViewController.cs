@@ -65,10 +65,27 @@ namespace WebApiCore.Controllers
         // POST: AppointmentsView/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Create will be used by practitioners
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AppointmentId,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
         {
+            var userId = _userService.GetUserId();
+            appointment.PractitionerID = userId;
+            if (ModelState.IsValid)
+            {
+                await _appointments.Add(appointment);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(appointment);
+        }
+        // PatientCreate will be used by patients
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PatientCreate([Bind("AppointmentId,StartTime,EndTime,AppointmentReason,AppointmentInstructions,PatientID,PractitionerID")] Appointment appointment)
+        {
+            var userId = _userService.GetUserId();
+            appointment.PatientID = userId;
             if (ModelState.IsValid)
             {
                 await _appointments.Add(appointment);

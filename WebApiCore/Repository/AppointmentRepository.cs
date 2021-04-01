@@ -57,6 +57,8 @@ namespace WebApiCore.Repository
 
         public async Task<int> Add(Appointment appointment)
         {
+
+            var userId = _userService.GetUserId();
             var sql = @"Insert INTO Appointments (StartTime, EndTime, AppointmentReason, AppointmentInstructions, PatientID, PractitionerID)
                         VALUES(@StartTime, @EndTime, @AppointmentReason, @AppointmentInstructions, @PatientID, @PractitionerID)";
             using (IDbConnection conn = Connection)
@@ -114,5 +116,6 @@ namespace WebApiCore.Repository
                 return result.ToList();
             }
         }
+
     }
 }

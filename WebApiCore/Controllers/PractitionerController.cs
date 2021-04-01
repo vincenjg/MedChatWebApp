@@ -40,7 +40,7 @@ namespace WebApiCore.Controllers
 
         // This returns all patients associated with a practitioner.
         [HttpGet("GetAllPatients")]
-        public async Task<IEnumerable<Patient>> GetAllById(int id)
+        public async Task<IEnumerable<Patient>> GetAllById(string id)
         {
             List<Patient> patients = (List<Patient>)await _patients.GetAllById(id);
             return patients;

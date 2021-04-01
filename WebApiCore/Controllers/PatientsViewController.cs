@@ -3,23 +3,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Models;
 using WebApiCore.Repository;
+using WebApiCore.Services;
 
 namespace WebApiCore.Controllers
 {
     public class PatientsViewController : Controller
     {
         private readonly IPatientRepository _patients;
+        private readonly IUserService _userService;
 
-        public PatientsViewController(IPatientRepository patients)
+        public PatientsViewController(IPatientRepository patients, IUserService userService)
         {
             _patients = patients;
+            _userService = userService;
         }
 
         // GET: Patients
         public async Task<IActionResult> Index()
         {
             //return View(await _patients.GetAll());
-            return View(await _patients.GetAllById(0));
+
+            var userId = _userService.GetUserId();
+            return View(await _patients.GetAllById(userId));
         }
 
         // GET: Patients/Details/5

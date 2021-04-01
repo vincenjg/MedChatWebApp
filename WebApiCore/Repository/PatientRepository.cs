@@ -86,12 +86,12 @@ namespace WebApiCore.Repository
         /// </summary>
         /// <param name="practitionerId">Id of specific practitioner</param>
         /// <returns>A list of patients that "belong" to the specified practitioner.</returns>
-        public async Task<IEnumerable<Patient>> GetAllById(int userId)
+        public async Task<IEnumerable<Patient>> GetAllById(string userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var pracID = _userService.GetUserId();
-                var result = await conn.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = pracID },
+                //var pracID = _userService.GetUserId();
+                var result = await conn.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = userId },
                    commandType: CommandType.StoredProcedure);
                 return (List<Patient>)result;
                 //return result.ToList();
@@ -137,6 +137,16 @@ namespace WebApiCore.Repository
                 var affectedRows = await conn.ExecuteAsync(sql, patient);
                 return affectedRows;
             }
+        }
+
+        //used to retrive patient emails associated with practitioner
+        public IEnumerable<Patient> GetpatientsList()
+        {
+            var userId = _userService.GetUserId();
+            //string sql = @"Select EmailAddress FROM Patients WHERE PatientID = @PatientID";
+            var result = Connection.QueryAsync<Patient>("dbo.spGetAllPatientByPracId", new { PractitionerID = userId },
+                   commandType: CommandType.StoredProcedure);
+            return result;
         }
     }
 }

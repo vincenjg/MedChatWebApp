@@ -12,7 +12,8 @@ namespace WebApiCore.Repository
 
         Task<Patient> Get(string email, string password);
 
-        Task<IEnumerable<Patient>> GetAllById(int userId);
+        Task<IEnumerable<Patient>> GetAllById(string userId);
+        IEnumerable<Patient> GetpatientsList();
 
         Task<IEnumerable<Patient>> GetAll();
 
