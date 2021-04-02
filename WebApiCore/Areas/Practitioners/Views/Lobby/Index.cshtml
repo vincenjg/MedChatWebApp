@@ -1,0 +1,38 @@
+﻿@model PractitionerLobbyViewModel
+@inject ComponentHttpClient Client
+@inject IUserService UserService
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<!--for displaying a list patients in the lobby on the left hand side-->
+<div class="custom-control custom-switch">
+    <input type="checkbox" class="custom-control-input"
+           id="onlineStatusToggle" />
+    <label class="custom-control-label" for="onlineStatusToggle">Toggle this switch to go on or off-line</label>
+</div>
+
+<hr />
+
+<div class="card-group">
+    @await Html.PartialAsync("~/Views/Shared/_LobbyMembers.cshtml", Model)
+</div>
+<!--displaying more patient information on the right hand side-->
+
+@section Scripts {
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/PracLobby.js"></script>
+    <script>
+        $(function () {
+            var model = @Json.Serialize(Model);
+
+            if (model.IsOnline) {
+                $("#onlineStatusToggle").prop("checked", true);
+            }
+        });
+    </script>
+}
+

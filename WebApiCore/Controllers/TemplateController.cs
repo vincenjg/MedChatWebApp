@@ -40,5 +40,16 @@ namespace WebApiCore.Controllers
             return temp.TemplateData;
         }
 
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            await _templates.Delete(id.GetValueOrDefault());
+            return RedirectToAction(nameof(Index));
+
+        }
+
     }
 }

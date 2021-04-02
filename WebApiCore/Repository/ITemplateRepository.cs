@@ -16,5 +16,7 @@ namespace WebApiCore.Repository
         Task<IEnumerable<TemplateModel>> GetById(int id);
 
         Task<TemplateModel> Get(int id);
+
+        Task<int> Delete(int id);
     }
 }
