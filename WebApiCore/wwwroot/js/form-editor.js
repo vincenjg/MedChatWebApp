@@ -14,7 +14,6 @@
             TemplateData: $("build-wrap").val()
         }*/
         console.log(dataToSend);
-        alert(formName);     
         $.ajax({
             url: '/Template/SendTemplateData',
             type: 'POST',
@@ -25,6 +24,23 @@
             error: function (response) {
                 alert("Error - Contact Admins!")
             }            
+        });
+    });
+
+    document.getElementById("delete").addEventListener("click", () => {
+
+        var formId = document.getElementById("Dropdown1").value;
+
+        $.ajax({
+            url: '/Template/Delete',
+            type: 'DELETE',
+            data: { id: formId },
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (response) {
+                alert("Error - Contact Admins!")
+            }
         });
     });
 
@@ -84,7 +100,6 @@
                         var renderName = document.getElementById("dataInput").value;
 
                         console.log("result:", renderToSend);
-                        alert(renderName);
 
                         $.ajax({
                             url: '/Template/SendTemplateData',

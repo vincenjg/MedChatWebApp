@@ -82,6 +82,17 @@ namespace WebApiCore.Repository
             return result;
         }
 
+        public async Task<int> Delete(int id)
+        {
+            var sql = @"DELETE FROM Templates WHERE TemplateID = @Id";
+
+            using (IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, new { Id = id });
+                return affectedRows;
+            }
+        }
+
         public async Task<IEnumerable<TemplateModel>> GetAllTemplateNames()
         {
             string sql = @"Select TemplateID, TemplateName From Templates";
