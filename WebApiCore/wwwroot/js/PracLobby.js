@@ -34,7 +34,7 @@
     $("#onlineStatusToggle").change(function () {
         var checked = $(this).prop("checked") ? true : false;
 
-        var data = { "status": { "id": 8, "isOnline": checked } };
+        var data = { "status": { "id": 13, "isOnline": checked } };
 
         $.ajax({
             headers: {

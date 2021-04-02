@@ -10,7 +10,7 @@ namespace WebApiCore.Options
     {
         public ComponentHttpClient()
         {
-            this.BaseAddress = new Uri("https://localhost:44361");
+            this.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net/");
         }
     }
 }

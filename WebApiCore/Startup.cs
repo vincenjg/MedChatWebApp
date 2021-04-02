@@ -64,7 +64,7 @@ namespace WebApiCore
             services.AddScoped<ComponentHttpClient>();
             services.AddHttpClient("ComponentsClient", client =>
             {
-                client.BaseAddress = new Uri("https://localhost:44361");
+                client.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net/");
             });
 
             services.AddResponseCompression(opts =>
