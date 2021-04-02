@@ -53,6 +53,9 @@
             console.log(formId);
             //console.log(dataToGet);
 
+            //script to load the save rendered form option.
+            document.getElementById("saveRender").style.display = "";
+
             $.ajax({
                 url: "/Template/GetTemplateData",
                 type: "GET",
