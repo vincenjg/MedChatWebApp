@@ -158,7 +158,7 @@ namespace WebApiCore.Repository
                         TestPassword = @TestPassword, 
                         EmailAddress = @EmailAddress, 
                         Title = @Title 
-                        WHERE PractitionerId = @PractitionerId";
+                        WHERE PractitionerID = @PractitionerId";
 
             using (IDbConnection conn = Connection)
             {
@@ -171,11 +171,15 @@ namespace WebApiCore.Repository
         {
             var sql = @"UPDATE Practitioners
                         SET IsOnline = @isOnline
-                        WHERE PractitionerId = @id";
+                        WHERE PractitionerID = @id";
+
+            var dbparams = new DynamicParameters();
+            dbparams.Add("isOnline", practitionerStatus.isOnline, DbType.Byte);
+            dbparams.Add("id", practitionerStatus.id);
 
             using (IDbConnection conn = Connection)
             {
-                var affectedRows = await conn.ExecuteAsync(sql, practitionerStatus);
+                var affectedRows = await conn.ExecuteAsync(sql, dbparams);
                 return affectedRows;
             }
         }

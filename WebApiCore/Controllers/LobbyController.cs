@@ -65,7 +65,7 @@ namespace WebApiCore.Controllers
         public async Task<int> ChangeStatus([FromBody] JObject data)
         {
             //TODO: should I just use the practitioner repository instead of using the lobby service?
-            var lobbyName = data["lobbyName"].ToString();
+            //var lobbyName = data["lobbyName"].ToString();
             var status = data["status"].ToObject<PractitionerStatus>();
             var affectedRows = await _practitioners.ChangeStatus(status);
             return affectedRows;

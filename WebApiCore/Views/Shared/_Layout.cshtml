@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - WebApiCore</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/twilio.css" />
     @RenderSection("Styles", required: false)
@@ -21,9 +20,9 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-lg-row-reverse">
-                <a class="navbar-brand" asp-area="Practitioners" asp-controller="Lobby" asp-action="Index">Practitioners Lobby</a>
-                <a class="navbar-brand" asp-area="Patients" asp-controller="Lobby" asp-action="Index">Patient Lobby</a>
-                <a class="navbar-brand" asp-area="" asp-controller="videoCall" asp-action="Index">Video Call</a>
+                    <a class="navbar-brand" asp-area="Practitioners" asp-controller="Lobby" asp-action="Index">Practitioners Lobby</a>
+                    <a class="navbar-brand" asp-area="Patients" asp-controller="Lobby" asp-action="Index">Patient Lobby</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="videoCall" asp-action="Index">Video Call</a>
                     <partial name="_LoginPartial.cshtml" />
                 </div>
 
@@ -47,7 +46,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
