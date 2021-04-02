@@ -73,6 +73,12 @@ namespace WebApiCore.Services
         public List<Patient> GetLobbyMembers(int practitionerId)
         {
             var lobby = _lobbies.FirstOrDefault(lobby => lobby.Practitioner.PractitionerID == practitionerId);
+
+            if (lobby.Patients == null)
+            {
+                return new List<Patient>();
+            }
+
             return lobby.Patients;
         }
 

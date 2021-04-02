@@ -23,7 +23,6 @@ namespace WebApiCore.Options
             return secret.SecretIdentifier.Name.Substring(_prefix.Length)
                 .Replace("--", ConfigurationPath.KeyDelimiter);
         }
-
         
     }
 }

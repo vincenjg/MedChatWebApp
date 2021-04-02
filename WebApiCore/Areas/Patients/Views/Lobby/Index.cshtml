@@ -35,10 +35,9 @@
 </div>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(function () {
             /*----Intialize, start, and configure the hub----*/
             var connection = new signalR.HubConnectionBuilder().withUrl("/LobbyHub").build();
 
@@ -68,19 +67,28 @@
                 $("#lobbySelect").prop("disabled", true);
                 $("#leaveBtn").prop("disabled", false);
 
-                $.post("/Patients/Lobby?handeler=JoinLobby",
-                    {
-                        "lobbyName": @Model.SelectedPractitioner,
-                        "patient": "{}"
-                    })
-                    .done(function (message) {
+                var model = @Json.Serialize(Model);
+                var data = { "lobbyName": "John Doe DDS", "id": 1};
+
+                $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/Patients/Lobby/JoinLobby",
+                    type: "POST",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (message) {
                         $("#lobbyMessage").text(message);
-                        connection.invoke("JoinLobby", "John Doe MD", message);
-                    })
-                    .fail(function (error) {
+                        connection.invoke("JoinLobby", "John Doe DDS", message);
+                    },
+                    error: function (error) {
                         console.log(error);
                         alert(error);
-                    });
+                    }
+                });
             });
 
             $("#leaveBtn").click(function () {
@@ -90,35 +98,53 @@
         });
 
         function PopulateCards() {
-            $.get("/Patients/Lobby?handler=GetPractitionersAsync",
-                {
-                    "id": "1"
-                })
-                .done(function (partialView) {
-                    //$("#cards").append(partialView);
-                })
-                .fail(function (error) {
+            var data = { "id": 1 };
+
+             $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: "/Patients/Lobby/GetPractitionersAsync",
+                type: "GET",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (message) {
+                    $("#cards").html(partialView);
+                },
+                error: function (error) {
                     console.log(error);
                     alert(error);
-                });
+                }
+            });
         }
 
         function LeaveLobby() {
-            $.post("/Patients/Lobby?handler=LeaveLobby",
-                {
-                    "lobbyName": @Model.SelectedPractitioner
-                })
-                .done(function (message) {
+            var model = @Json.Serialize(Model);
+            var data = { "lobbyName": "John Doe DDS", "id": 1 };
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: "/Patients/Lobby/LeaveLobby",
+                type: "POST",
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                dataType: "json",
+                success: function (message) {
                     $("#lobbyMessage").text("");
                     $("#leaveBtn").prop("disabled", true);
                     $("#lobbySelect").val("0");
                     $("#lobbySelect").prop("disabled", false);
-                    connection.invoke("LeaveLobby", @Model.SelectedPractitioner, message);
-                })
-                .fail(function (error) {
+                    connection.invoke("LeaveLobby", "John Doe DDS", message);
+                },
+                error: function (error) {
                     console.log(error);
                     alert(error);
-                });
+                }
+            });
         }
     </script>
 }
