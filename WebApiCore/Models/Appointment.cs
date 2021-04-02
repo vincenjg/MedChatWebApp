@@ -15,18 +15,22 @@ namespace WebApiCore.Models
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm:ss tt}")]
         [DateValidation(ErrorMessage = "Is this a valid date?")]
+        [Display(Name = "Start Time")]
         public DateTime StartTime { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm: tt}")]
         [DateValidation(ErrorMessage = "Is this a valid date?")]
+        [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
+        [Display(Name = "Appointment Reason")]
         public string AppointmentReason { get; set; }
+        [Display(Name = "Appointment Instructions")]
         public string AppointmentInstructions { get; set; }
         
         [ForeignKey("ApplicationUser")]
-        public int PractitionerID { get; set; }
-        public int PatientID { get; set; }
+        public string PractitionerID { get; set; }
+        public string PatientID { get; set; }
 
         public string EpicId { get; set; }
         //virtual keyword is used to modify a method, property, indexer, or event declaration and allow for it to be overridden in a derived class

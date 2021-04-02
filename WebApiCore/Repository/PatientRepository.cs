@@ -87,12 +87,12 @@ namespace WebApiCore.Repository
         /// </summary>
         /// <param name="practitionerId">Id of specific practitioner</param>
         /// <returns>A list of patients that "belong" to the specified practitioner.</returns>
-        public async Task<IEnumerable<Patient>> GetAllById(int userId)
+        public async Task<IEnumerable<Patient>> GetAllById(string userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var pracID = _userService.GetUserId();
-                var result = await conn.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = pracID },
+                //var pracID = _userService.GetUserId();
+                var result = await conn.QueryAsync<Patient>("dbo.spGetAllPatients", new { PractitionerID = userId },
                    commandType: CommandType.StoredProcedure);
                 return (List<Patient>)result;
                 //return result.ToList();
@@ -139,5 +139,6 @@ namespace WebApiCore.Repository
                 return affectedRows;
             }
         }
+
     }
 }
