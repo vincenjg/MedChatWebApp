@@ -1,0 +1,124 @@
+﻿@model PatientLobbyViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        
+        .pull-right {
+            float: right !important;
+        }
+    </style>
+}
+
+@Html.AntiForgeryToken()
+
+<!--display list of associated practitioners-->
+<div class="card-group" id="cards">
+    @await Html.PartialAsync("~/Views/Shared/_Cards.cshtml", Model)
+</div>
+
+<hr />
+
+<!--show dropdown of online practitioners to chose a lobby-->
+<div class="container">
+    <select id="lobbySelect" asp-for="SelectedPractitioner"
+            asp-items="@new SelectList(Model.Practitioners, nameof(Practitioner.PractitionerID), nameof(Practitioner.FullName))">
+        <option value="0">Choose a Practitioner's lobby</option>
+    </select>
+    <button class="btn btn-primary pull-right" id="leaveBtn" disabled>
+        Leave Lobby
+    </button>
+    <label id="lobbyMessage">@Model.LobbyMessage</label>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /*----Intialize, start, and configure the hub----*/
+            var connection = new signalR.HubConnectionBuilder().withUrl("/LobbyHub").build();
+
+            connection.start().catch(function (err) {
+                return console.error(err.toString());
+            });
+
+            connection.on("AvailabilityChanged", function (status) {
+                if (status.isOnline == false) {
+                    LeaveLobby();
+                }
+
+                PopulateCards();
+            });
+
+            connection.on("ReceiveMessage", function (message) {
+                $("#lobbyMessage").text(message);
+            });
+
+        /*----configure select and button behavior----*/
+            if ($("#lobbySelect").val() != 0) {
+                $("#lobbySelect").prop("disabled", true);
+                $("#leaveBtn").prop("disabled", false);
+            }
+
+            $("#lobbySelect").change(function () {
+                $("#lobbySelect").prop("disabled", true);
+                $("#leaveBtn").prop("disabled", false);
+
+                $.post("/Patients/Lobby?handeler=JoinLobby",
+                    {
+                        "lobbyName": @Model.SelectedPractitioner,
+                        "patient": "{}"
+                    })
+                    .done(function (message) {
+                        $("#lobbyMessage").text(message);
+                        connection.invoke("JoinLobby", "John Doe MD", message);
+                    })
+                    .fail(function (error) {
+                        console.log(error);
+                        alert(error);
+                    });
+            });
+
+            $("#leaveBtn").click(function () {
+                LeaveLobby();
+            });
+
+        });
+
+        function PopulateCards() {
+            $.get("/Patients/Lobby?handler=GetPractitionersAsync",
+                {
+                    "id": "1"
+                })
+                .done(function (partialView) {
+                    //$("#cards").append(partialView);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                    alert(error);
+                });
+        }
+
+        function LeaveLobby() {
+            $.post("/Patients/Lobby?handler=LeaveLobby",
+                {
+                    "lobbyName": @Model.SelectedPractitioner
+                })
+                .done(function (message) {
+                    $("#lobbyMessage").text("");
+                    $("#leaveBtn").prop("disabled", true);
+                    $("#lobbySelect").val("0");
+                    $("#lobbySelect").prop("disabled", false);
+                    connection.invoke("LeaveLobby", @Model.SelectedPractitioner, message);
+                })
+                .fail(function (error) {
+                    console.log(error);
+                    alert(error);
+                });
+        }
+    </script>
+}

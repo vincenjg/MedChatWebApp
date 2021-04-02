@@ -1,0 +1,32 @@
+﻿@using WebApiCore.Models
+@model PatientLobbyViewModel
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/carousel.css" />
+    <style>
+        .card {
+            text-align: center;
+            border: 1px solid #D9D7DA;
+            padding: 12px;
+        }
+        .card-img-top {
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+            background-color: #ffffff;
+        }
+    </style>
+}
+
+@foreach (Practitioner practitioner in Model.Practitioners)
+{
+    string bacgroundColorStyle = practitioner.IsOnline ? "bg-success" : "bg-secondary";
+
+    <div class="card @bacgroundColorStyle" style="max-width: 18rem;">
+        <img class="card-img-top card-header rounded-circle z-depth-2" src="~/imgs/icon.png" alt="card image cap" />
+        <div class="card-body">
+            <h5 class="card-title" style="text-align: center;">@practitioner.FullName</h5>
+            <p class="card-text" style="text-align: center;">@practitioner.Title</p>
+        </div>
+    </div>
+}

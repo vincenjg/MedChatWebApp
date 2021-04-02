@@ -19,6 +19,8 @@ namespace WebApiCore.Repository
         Task<int> Update(Practitioner patient);
         Task<int> Delete(int id);
 
+        Task<int> ChangeStatus(PractitionerStatus practitionerStatus);
+
         Task<IdentityResult> CreateAsync(Practitioner user, CancellationToken cancellationToken);
     }
 }

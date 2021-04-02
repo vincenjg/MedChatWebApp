@@ -1,0 +1,99 @@
+﻿@model PractitionerLobbyViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="container">
+    <!--for displaying a list patients in the lobby on the left hand side-->
+    <div class="col-lg-3">
+        <form method="get">
+            <input id="onlineStatusToggle" type="checkbox" data-toggle="toggle"
+                   data-on="Online" data-off="Offline" data-onstyle="success"/>
+        </form>
+
+        @if (Model.Patients.Any())
+        {
+            @foreach (var patient in Model.Patients)
+            {
+                <div class="card" id="not-empty-patient-list">
+                    <img src="~/imgs/icon.png" alt="Avatar">
+                    <div class="container">
+                        <h4>Patient Name: @patient.GetFullName()</h4>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <!--maybe find out page height and fill with empty cards?-->
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+            <div class="card" id="empty-patient-list">
+                <img src="~/imgs/icon.png" alt="Avatar">
+                <div class="container">
+                    <h4>No Patients in Lobby.</h4>
+                </div>
+            </div>
+        }
+    </div>
+    <!--displaying more patient information on the right hand side-->
+    <div class="col-lg-9">
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // get status from db
+        $(document).ready(function () {
+            $("[name='onlineStatusToggle']").bootstrapToggle();
+        });
+
+        $(function () {
+            $("#onlineStatusToggle").change(function () {
+                // if true load if false don't
+                $.ajax({
+                    url: "/Lobby?handler=LobbyMembers",
+                    method: "GET",
+                    success: function (response) {
+                        console.log("request successful");
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                })
+            })
+        })
+    </script>
+}

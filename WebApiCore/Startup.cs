@@ -1,33 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using WebApiCore.Hubs;
+using WebApiCore.Models;
+using WebApiCore.Options;
+using WebApiCore.Services;
+using WebApiCore.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebApiCore.Hubs;
-using WebApiCore.Models;
-using WebApiCore.Utilities;
-using WebApiCore.Services;
-using WebApiCore.Repository;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Net.Http.Headers;
+using System;
+using System.Linq;
 
 namespace WebApiCore
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -35,10 +29,25 @@ namespace WebApiCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            // MVC and Blazor 
+            services.AddMvc();
             services.AddControllersWithViews().AddNewtonsoftJson();
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+            services.AddServerSideBlazor();
 
             //data context connection setup with dapper            
+            // Settings
+            services.Configure<TwilioSettings>(settings =>
+            {
+                settings.AccountSid = Configuration.GetSection("Secrets").GetSection("TwilioAccountSid").Value;
+                settings.ApiSecret = Configuration.GetSection("Secrets").GetSection("TwilioAPiSecret").Value;
+                settings.ApiKey = Configuration.GetSection("Secrets").GetSection("TwilioApiKey").Value;
+            });
+
+            // Services and Repositories
+            services.AddSingleton<TwilioService>();
+            services.AddSingleton<ILobbyService, LobbyService>();
+
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IPractitionerRepository, PractitionerRepository>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
@@ -48,16 +57,21 @@ namespace WebApiCore
             services.AddTransient<IUserStore<Practitioner>, UserStore>();
             services.AddTransient<IRoleStore<PractitionerRoleModel>, RoleStore>(); 
 
-            services.AddRazorPages();
+            services.AddSignalR(Options => Options.EnableDetailedErrors = true)
+               .AddMessagePackProtocol();
 
-            //adding signal R
-            services.AddSignalR(Options => Options.EnableDetailedErrors = true);
+            // HttpClients
+            services.AddScoped<ComponentHttpClient>();
+            services.AddHttpClient("ComponentsClient", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:44361");
+            });
 
-            // add data layer dependencies
-            /* var dbConnection = Configuration.GetSection("DefaultConnection");
-             services.Configure<ConnectionStrings>(dbConnection);
-             services.AddDataAccess();*/
-            services.AddMvc();
+            services.AddResponseCompression(opts =>
+               opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+                   new[] { "application/octet-stream" }
+                   )
+               );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,13 +87,21 @@ namespace WebApiCore
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                HttpsCompression = HttpsCompressionMode.Compress,
+                OnPrepareResponse = context =>
+                    context.Context.Response.Headers[HeaderNames.CacheControl] =
+                        $"public,max-age={86_400}"
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
 
 
             app.UseRouting();
-
             app.UseAuthorization();
             //registration
             //to be added
@@ -88,14 +110,20 @@ namespace WebApiCore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "MyArea",
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 //to be added ... this is for URLs
                 endpoints.MapRazorPages();
+                endpoints.MapBlazorHub();
 
                 //for signalR - a route for the Hub that our clients will connect to (right before UseMvc):
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<LobbyHub>(HubEndpoints.LobbyHub);
+                endpoints.MapHub<NotificationHub>(HubEndpoints.NotificationHub);
             });
 
         }

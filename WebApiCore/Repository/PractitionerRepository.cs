@@ -26,7 +26,8 @@ namespace WebApiCore.Repository
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+                return new SqlConnection(_config.GetConnectionString("LocalConnection"));
+                //return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -162,6 +163,19 @@ namespace WebApiCore.Repository
             using (IDbConnection conn = Connection)
             {
                 var affectedRows = await conn.ExecuteAsync(sql, practitioner);
+                return affectedRows;
+            }
+        }
+
+        public async Task<int> ChangeStatus(PractitionerStatus practitionerStatus)
+        {
+            var sql = @"UPDATE Practitioners
+                        SET IsOnline = @isOnline
+                        WHERE PractitionerId = @id";
+
+            using (IDbConnection conn = Connection)
+            {
+                var affectedRows = await conn.ExecuteAsync(sql, practitionerStatus);
                 return affectedRows;
             }
         }
