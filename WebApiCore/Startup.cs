@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging.AzureAppServices;
 
 namespace WebApiCore
 {
@@ -35,8 +36,11 @@ namespace WebApiCore
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor();
 
+
             //data context connection setup with dapper            
             // Settings
+            services.Configure<AzureFileLoggerOptions>(Configuration.GetSection("AzureLogging"));
+
             services.Configure<TwilioSettings>(settings =>
             {
                 settings.AccountSid = Configuration.GetSection("Secrets").GetSection("TwilioAccountSid").Value;

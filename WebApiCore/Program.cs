@@ -19,6 +19,7 @@ namespace WebApiCore
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    
                 })
             .ConfigureAppConfiguration((hostingContext, config) =>
             {
