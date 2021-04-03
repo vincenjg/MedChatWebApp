@@ -26,8 +26,8 @@ namespace WebApiCore.Repository
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("LocalConnection"));
-                //return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+                //return new SqlConnection(_config.GetConnectionString("LocalConnection"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
