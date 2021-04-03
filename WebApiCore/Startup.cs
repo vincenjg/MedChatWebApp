@@ -112,9 +112,9 @@ namespace WebApiCore
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
+                /*endpoints.MapControllerRoute(
                     name: "MyArea",
-                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");*/
 
                 endpoints.MapControllerRoute(
                     name: "default",
