@@ -13,7 +13,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ConnectionStrings:TestString": "Test conn string overwritten",
-        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_ENVIRONMENT": "Production",
         "Secrets__TEST_VAR": "ENV var retrieved"
       }
     },
