@@ -28,7 +28,7 @@ namespace WebApiCore
 
                 var keyVaultClient = new KeyVaultClient(async (authority, resource, scope) =>
                 {
-                    var credential = new DefaultAzureCredential(false);
+                    var credential = new DefaultAzureCredential(new DefaultAzureCredentialOptions { ExcludeSharedTokenCacheCredential = true });
                     var token = credential.GetToken(
                         new Azure.Core.TokenRequestContext(
                             new[] { "https://vault.azure.net/.default" }));
