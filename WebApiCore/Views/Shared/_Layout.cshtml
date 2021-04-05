@@ -20,9 +20,6 @@
                 </button>
 
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-lg-row-reverse">
-                    <a class="navbar-brand" asp-area="Practitioners" asp-controller="Lobby" asp-action="Index">Practitioners Lobby</a>
-                    <a class="navbar-brand" asp-area="Patients" asp-controller="Lobby" asp-action="Index">Patient Lobby</a>
-                    <a class="navbar-brand" asp-area="" asp-controller="videoCall" asp-action="Index">Video Call</a>
                     <partial name="_LoginPartial.cshtml" />
                 </div>
 
@@ -43,16 +40,18 @@
     </footer>
     <script src="_framework/blazor.server.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
     <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
     <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/twilioVideo.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!--The scripts required to load the custom template-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
