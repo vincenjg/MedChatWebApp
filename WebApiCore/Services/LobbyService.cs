@@ -74,7 +74,7 @@ namespace WebApiCore.Services
         {
             var lobby = _lobbies.FirstOrDefault(lobby => lobby.Practitioner.PractitionerID == practitionerId);
 
-            if (lobby.Patients == null)
+            if (lobby == null || lobby.Patients == null)
             {
                 return new List<Patient>();
             }

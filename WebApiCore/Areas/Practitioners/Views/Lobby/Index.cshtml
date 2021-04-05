@@ -20,10 +20,11 @@
 <div class="card-group">
     @await Html.PartialAsync("~/Views/Shared/_LobbyMembers.cshtml", Model)
 </div>
+
+<button id="secretBtn" class="button"></button>
 <!--displaying more patient information on the right hand side-->
 
 @section Scripts {
-    <script src="~/js/signalr/dist/browser/signalr.js"></script>
     <script src="~/js/PracLobby.js"></script>
     <script>
         $(function () {
