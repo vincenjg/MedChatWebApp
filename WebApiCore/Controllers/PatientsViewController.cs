@@ -11,11 +11,13 @@ namespace WebApiCore.Controllers
     {
         private readonly IPatientRepository _patients;
         private readonly IUserService _userService;
+        private readonly IPractitionerRepository _practitionerRepository;
 
-        public PatientsViewController(IPatientRepository patients, IUserService userService)
+        public PatientsViewController(IPatientRepository patients, IUserService userService, IPractitionerRepository practitionerRepository)
         {
             _patients = patients;
             _userService = userService;
+            _practitionerRepository = practitionerRepository;
         }
 
         // GET: Patients
