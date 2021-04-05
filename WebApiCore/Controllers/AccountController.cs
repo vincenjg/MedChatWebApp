@@ -24,17 +24,20 @@ namespace WebApiCore.Controllers
         private readonly SignInManager<Practitioner> _signInManager;
         //private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IUserService _userService;
 
         public AccountController(
                 UserManager<Practitioner> userManager,
                 SignInManager<Practitioner> signInManager,
                 //IEmailSender emailSender,
-                ILogger<AccountController> logger)
+                ILogger<AccountController> logger,
+                IUserService userService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             //_emailSender = emailSender;
             _logger = logger;
+            _userService = userService;
         }
 
         [TempData]
@@ -51,11 +54,14 @@ namespace WebApiCore.Controllers
             return View();
         }
 
+        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
+
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -67,6 +73,8 @@ namespace WebApiCore.Controllers
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
+
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -136,9 +144,11 @@ namespace WebApiCore.Controllers
             }
             else
             {
+                PartialView("~/Views/Shared/_loginPartial2.cshtml");
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }
+
 
         private void AddErrors(IdentityResult result)
         {
