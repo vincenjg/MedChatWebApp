@@ -64,7 +64,8 @@ namespace WebApiCore.Repository
                                LastName,
                                Title,
                                EmailAddress,
-                               TestPassword
+                               TestPassword,
+                               IsOnline
                       FROM Practitioners WHERE PractitionerID = @Id";
 
             using (IDbConnection conn = Connection)
