@@ -110,10 +110,11 @@ namespace WebApiCore
             app.UseCors("CorsPolicy");
 
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             //registration
             //to be added
-            app.UseAuthentication();
+            
 
             app.UseEndpoints(endpoints =>
             {

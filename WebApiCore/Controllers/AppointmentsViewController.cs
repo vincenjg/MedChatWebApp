@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Models;
 using WebApiCore.Repository;
@@ -9,6 +10,7 @@ using WebApiCore.Services;
 
 namespace WebApiCore.Controllers
 {
+    
     public class AppointmentsViewController : Controller
     {
 
@@ -20,7 +22,7 @@ namespace WebApiCore.Controllers
             _appointments = appointments;
             _userService = userService;
         }
-
+        [Authorize(Roles = "PRAC")]
         //view all appointments. 
         public async Task<IActionResult> Index()
         {
@@ -29,9 +31,12 @@ namespace WebApiCore.Controllers
             return View(await _appointments.GetAllByPractitionerId(userId));
 
         }
+
+        [Authorize(Roles = "PATIENT")]
         public async Task<IActionResult> PatientIndex()
         {
-            return View(await _appointments.GetAllByPatientId(5));
+            var userId = _userService.GetUserId();
+            return View(await _appointments.GetAllByPatientId(userId));
         }
 
         //test to view only appointments based on a practitioner's ID
