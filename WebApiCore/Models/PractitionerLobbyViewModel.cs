@@ -10,6 +10,7 @@ namespace WebApiCore.Models
     {
         [BindProperty]
         public bool IsOnline { get; set; }
+        public string LobbyName { get; set; }
         public List<Patient>? Patients { get; set; }
 
     }

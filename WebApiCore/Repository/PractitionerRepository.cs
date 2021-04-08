@@ -26,8 +26,8 @@ namespace WebApiCore.Repository
         {
             get
             {
-                return new SqlConnection(_config.GetConnectionString("RandConnectionTwo"));
-                //return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+                //return new SqlConnection(_config.GetConnectionString("RandConnectionTwo"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
@@ -59,7 +59,7 @@ namespace WebApiCore.Repository
         /// <returns></returns>
         public async Task<Practitioner> Get(int id)
         {
-            var sql = @"SELECT PractitionerID AS Id,
+            var sql = @"SELECT PractitionerID,
                                FirstName,
                                LastName,
                                Title,
@@ -77,7 +77,7 @@ namespace WebApiCore.Repository
 
         public async Task<Practitioner> Get(string email, string password)
         {
-            var sql = @"SELECT PractitionerID AS Id, FirstName, LastName, Title, EmailAddress, TestPassword
+            var sql = @"SELECT PractitionerID, FirstName, LastName, Title, EmailAddress, TestPassword
                         FROM Practitioners Where EmailAddress = @EmailAddress AND TestPassword = @Password";
 
             var dbparams = new DynamicParameters();

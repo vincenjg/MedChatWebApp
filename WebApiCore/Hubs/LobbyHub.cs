@@ -25,10 +25,10 @@ namespace WebApiCore.Hubs
             await Clients.Group(lobbyName).SendAsync("ReceiveMessage", lobbyMessage);
         }
 
-        public async Task LeaveLobby(string lobbyName, int lobbyCount)
+        public async Task LeaveLobby(string lobbyName, string lobbyMessage)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobbyName);
-            await Clients.Group(lobbyName).SendAsync("ReceiveMessage", $"There are now {lobbyCount} in the Lobby.");
+            await Clients.Group(lobbyName).SendAsync("ReceiveMessage", lobbyMessage);
         }
 
         public async Task DestroyLobby(string lobbyName)

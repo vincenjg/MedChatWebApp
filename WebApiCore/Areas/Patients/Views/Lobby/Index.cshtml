@@ -35,15 +35,10 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
-    <script type="text/javascript">
+    <script>
         $(function () {
             /*----Intialize, start, and configure the hub----*/
             var connection = new signalR.HubConnectionBuilder().withUrl("/LobbyHub").build();
-
-            connection.start().catch(function (err) {
-                return console.error(err.toString());
-            });
 
             connection.on("AvailabilityChanged", function (status) {
                 if (status.isOnline == false) {
@@ -56,6 +51,13 @@
             connection.on("ReceiveMessage", function (message) {
                 $("#lobbyMessage").text(message);
             });
+
+            connection.start().
+                then(() => console.log("Connection started!"))
+                .catch( function (error) {
+                    console.log('Error while establishing connection :(');
+                    console.log(error);
+                });
 
         /*----configure select and button behavior----*/
             if ($("#lobbySelect").val() != 0) {
@@ -78,15 +80,15 @@
                     url: "/Patients/Lobby/JoinLobby",
                     type: "POST",
                     data: JSON.stringify(data),
-                    contentType: "application/json",
-                    dataType: "json",
+                    dataType: "html",
                     success: function (message) {
+                        console.log("request successful");
                         $("#lobbyMessage").text(message);
                         connection.invoke("JoinLobby", "John Doe DDS", message);
                     },
-                    error: function (error) {
-                        console.log(error);
-                        alert(error);
+                    error: function (jqxhr, status, error) {
+                        console.error("request failed");
+                        console.error(error);
                     }
                 });
             });
@@ -95,34 +97,33 @@
                 LeaveLobby();
             });
 
-        });
 
-        function PopulateCards() {
-            var data = { "id": 1 };
+            function PopulateCards() {
+                var data = { "id": 1 };
 
-             $.ajax({
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                url: "/Patients/Lobby/GetPractitionersAsync",
-                type: "GET",
-                data: JSON.stringify(data),
-                contentType: "application/json",
-                dataType: "json",
-                success: function (message) {
-                    $("#cards").html(partialView);
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert(error);
-                }
-            });
+                 $.ajax({
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/Patients/Lobby/GetPractitionersAsync",
+                    type: "GET",
+                    data: JSON.stringify(data),
+                    dataType: "html",
+                     success: function (partialView) {
+                        console.log("request successful");
+                        $("#cards").html(partialView);
+                    },
+                    error: function (jqxhr, status, error) {
+                        console.error("request failed");
+                        console.error(error);
+                    }
+                });
         }
 
         function LeaveLobby() {
             var model = @Json.Serialize(Model);
-            var data = { "lobbyName": "John Doe DDS", "id": 1 };
+            var data = { "lobbyName": "John Doe DDS", "patientId": 1 };
             $.ajax({
                 headers: {
                     'Accept': 'application/json',
@@ -131,20 +132,23 @@
                 url: "/Patients/Lobby/LeaveLobby",
                 type: "POST",
                 data: JSON.stringify(data),
-                contentType: "application/json",
-                dataType: "json",
+                dataType: "html",
                 success: function (message) {
+                    console.log("request successful");
                     $("#lobbyMessage").text("");
                     $("#leaveBtn").prop("disabled", true);
                     $("#lobbySelect").val("0");
                     $("#lobbySelect").prop("disabled", false);
                     connection.invoke("LeaveLobby", "John Doe DDS", message);
                 },
-                error: function (error) {
-                    console.log(error);
-                    alert(error);
+                error: function (jqxhr, status, error) {
+                    console.error("request failed");
+                    console.error(error);
                 }
             });
         }
+        });
+
+
     </script>
 }

@@ -31,8 +31,8 @@ namespace WebApiCore.Repository
         {
             get 
             {
-                return new SqlConnection(_config.GetConnectionString("RandConnectionTwo"));
-                //return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+                //return new SqlConnection(_config.GetConnectionString("RandConnectionTwo"));
+                return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
 
