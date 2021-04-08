@@ -32,7 +32,7 @@ namespace WebApiCore
                     defaultAzureCredentialOptions.ExcludeAzureCliCredential = false;
                     defaultAzureCredentialOptions.ExcludeEnvironmentCredential = true;
                     defaultAzureCredentialOptions.ExcludeInteractiveBrowserCredential = true;
-                    defaultAzureCredentialOptions.ExcludeManagedIdentityCredential = true;
+                    defaultAzureCredentialOptions.ExcludeManagedIdentityCredential = false;
                     defaultAzureCredentialOptions.ExcludeSharedTokenCacheCredential = true;
                     defaultAzureCredentialOptions.ExcludeVisualStudioCodeCredential = true;
                     defaultAzureCredentialOptions.ExcludeVisualStudioCredential = true;

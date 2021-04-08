@@ -68,7 +68,7 @@ namespace WebApiCore
                 options.AddPolicy("CorsPolicy", builder => 
                         builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithOrigins("https://localhost:44361")
+                        .WithOrigins("https://ezmedchat.azurewebsites.net/")
                         .AllowCredentials()));
 
             // HttpClients
