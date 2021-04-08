@@ -68,14 +68,14 @@ namespace WebApiCore
                 options.AddPolicy("CorsPolicy", builder => 
                         builder.AllowAnyMethod()
                         .AllowAnyHeader()
-                        .WithOrigins("https://ezmedchat.azurewebsites.net/")
+                        .WithOrigins("https://ezmedchat.azurewebsites.net")
                         .AllowCredentials()));
 
             // HttpClients
             services.AddScoped<ComponentHttpClient>();
             services.AddHttpClient("ComponentsClient", client =>
             {
-                client.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net/");
+                client.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net");
             });
 
             services.AddResponseCompression(opts =>

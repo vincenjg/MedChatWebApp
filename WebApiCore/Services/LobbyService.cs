@@ -21,7 +21,7 @@ namespace WebApiCore.Services
         public LobbyService()
         {
             _client = new HttpClient();
-            _client.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net/");
+            _client.BaseAddress = new Uri("https://ezmedchat.azurewebsites.net");
             _lobbies = new List<Lobby>();
         }
 
