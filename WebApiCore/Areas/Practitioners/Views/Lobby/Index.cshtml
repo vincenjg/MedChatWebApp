@@ -21,16 +21,17 @@
     @await Html.PartialAsync("~/Views/Shared/_LobbyMembers.cshtml", Model)
 </div>
 
-<button id="secretBtn" class="button"></button>
+<p class="invisible" id="lobbyName">@Model.LobbyName</p>
 <!--displaying more patient information on the right hand side-->
 
 @section Scripts {
     <script src="~/js/PracLobby.js"></script>
     <script>
         $(function () {
-            var model = @Json.Serialize(Model);
-
-            if (model.IsOnline) {
+            var cSharpModel = @Json.Serialize(Model);
+            var jsModel = JSON.parse(JSON.stringify(cSharpModel)) 
+            
+            if (jsModel.IsOnline) {
                 $("#onlineStatusToggle").prop("checked", true);
             }
         });

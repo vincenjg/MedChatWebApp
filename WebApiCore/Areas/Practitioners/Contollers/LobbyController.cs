@@ -36,22 +36,26 @@ namespace WebApiCore.Areas.Practitoners.Contollers
                 new PractitionerLobbyViewModel()
                 {
                     Patients = patients,
-                    IsOnline = user.IsOnline
+                    IsOnline = user.IsOnline,
+                    LobbyName = user.FullName
                 };
 
             return View(practitionerLobbyVM);
         }
 
         [HttpGet]
-        public IActionResult GetLobbyMembers(bool isOnline)
+        public async Task<IActionResult> GetLobbyMembers(bool isOnline)
         {
             int userId = Convert.ToInt32(_userService.GetUserId());
+            Practitioner user = await _practitioners.Get(userId);
+            List<Patient> temp = _lobbyService.GetLobbyMembers(userId);
 
             PractitionerLobbyViewModel practitionerLobbyVM =
                new PractitionerLobbyViewModel()
                {
                     Patients = _lobbyService.GetLobbyMembers(userId),
-                    IsOnline = isOnline
+                    IsOnline = isOnline,
+                    LobbyName = user.FullName
                };
 
             return PartialView("~/Views/Shared/_LobbyMembers.cshtml", practitionerLobbyVM);
@@ -61,31 +65,36 @@ namespace WebApiCore.Areas.Practitoners.Contollers
         public async Task<IActionResult> ChangeStatus([FromBody] JObject data)
         {
             PractitionerStatus status = data["status"].ToObject<PractitionerStatus>();
+
+            //int userId = Convert.ToInt32(_userService.GetUserId());
+            Practitioner user = await _practitioners.Get(status.id);
             //TODO: do some error checking here if I have time.
             var affectedRows = await _practitioners.ChangeStatus(status);
 
             if (status.isOnline)
             {
-                await CreateLobby();
+                CreateLobby(user, user.FullName);
 
                 PractitionerLobbyViewModel practitionerLobbyVM =
                 new PractitionerLobbyViewModel()
                 {
                     //Patients = _lobbyService.GetLobbyMembers(status.id),
                     Patients = null,
-                    IsOnline = status.isOnline
+                    IsOnline = status.isOnline,
+                    LobbyName = user.FullName
                 };
 
                 return PartialView("~/Views/Shared/_LobbyMembers.cshtml", practitionerLobbyVM);
             }
             else
             {
-                await DestroyLobby();
+                DestroyLobby(user.FullName);
 
                 PractitionerLobbyViewModel practitionerLobbyVM =
                    new PractitionerLobbyViewModel()
                    {
-                       IsOnline = status.isOnline
+                       IsOnline = status.isOnline,
+                       LobbyName = user.FullName
                    };
 
                 return PartialView("~/Views/Shared/_LobbyMembers.cshtml", practitionerLobbyVM);
@@ -93,18 +102,15 @@ namespace WebApiCore.Areas.Practitoners.Contollers
 
         }
 
-        private async Task CreateLobby()
+        private void CreateLobby(Practitioner user, string lobbyName)
         {
-            int userId = Convert.ToInt32(_userService.GetUserId());
-            Practitioner user = await _practitioners.Get(userId);
-            _lobbyService.CreatLobby(user, user.FullName);
+            
+            _lobbyService.CreatLobby(user, lobbyName);
         }
 
-        private async Task DestroyLobby()
+        private void DestroyLobby(string lobbyName)
         {
-            int userId = Convert.ToInt32(_userService.GetUserId());
-            Practitioner user = await _practitioners.Get(userId);
-            _lobbyService.DestroyLobby(user.FullName);
+            _lobbyService.DestroyLobby(lobbyName);
         }
     }
 }

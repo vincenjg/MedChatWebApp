@@ -60,6 +60,14 @@ namespace WebApiCore
             services.AddSignalR(Options => Options.EnableDetailedErrors = true)
                .AddMessagePackProtocol();
 
+            // allows requests from our front-end 
+            services.AddCors(options => 
+                options.AddPolicy("CorsPolicy", builder => 
+                        builder.AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithOrigins("https://localhost:44361")
+                        .AllowCredentials()));
+
             // HttpClients
             services.AddScoped<ComponentHttpClient>();
             services.AddHttpClient("ComponentsClient", client =>
@@ -99,7 +107,7 @@ namespace WebApiCore
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
             app.UseAuthorization();
