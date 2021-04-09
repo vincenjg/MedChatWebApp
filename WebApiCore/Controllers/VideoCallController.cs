@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace WebApiCore.Controllers
 {
     public class VideoCallController : Controller
     {
+        [Authorize(Roles = "PATIENT,PRAC")]
         public IActionResult Index()
         {
             return View();

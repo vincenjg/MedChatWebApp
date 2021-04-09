@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace WebApiCore.Areas.Practitoners.Contollers
             _lobbyService = lobbyService;
             _userService = userService;
         }
-
+        [Authorize(Roles = "PRAC")]
         public async Task<IActionResult> IndexAsync()
         {
             int userId = Convert.ToInt32(_userService.GetUserId());

@@ -14,7 +14,7 @@ namespace WebApiCore.Repository
 
         Task<IEnumerable<Appointment>> GetAllByPractitionerId(string userId);
 
-        Task<IEnumerable<Appointment>> GetAllByPatientId(int patientId);
+        Task<IEnumerable<Appointment>> GetAllByPatientId(string userId);
 
         Task<IEnumerable<Appointment>> GetAll();
 

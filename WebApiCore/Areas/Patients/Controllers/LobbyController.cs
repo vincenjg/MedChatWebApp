@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace WebApiCore.Areas.Patients.Controllers
             _practitioners = practitioners;
             _lobbyService = lobbyService;
         }
-
+        [Authorize(Roles = "PATIENT")]
         public async Task<IActionResult> IndexAsync()
         {
             patientLobbyVM = new PatientLobbyViewModel()

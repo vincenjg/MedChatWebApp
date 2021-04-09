@@ -4,12 +4,19 @@
 @inject SignInManager<Practitioner> SignInManager
 @inject UserManager<Practitioner> UserManager
 
-@if (SignInManager.IsSignedIn(User) && User.IsInRole("NOT"))
+@if (SignInManager.IsSignedIn(User) && User.IsInRole("PATIENT"))
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
+
+            <li class="nav-item">
+                <a class="nav-link text-dark title" asp-area="" asp-controller="videoCall" asp-action="Index">Video Call</a>
+            </li>
             <li>
                 <a class="nav-link text-dark title" asp-area="Patients" asp-controller="Lobby" asp-action="Index">Patient Lobby</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark title" asp-area="" asp-controller="AppointmentsView" asp-action="PatientIndex">Appointment</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark title" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
@@ -20,7 +27,7 @@
         </ul>
     </form>
 }
-else if (SignInManager.IsSignedIn(User))
+else if (SignInManager.IsSignedIn(User) && User.IsInRole("PRAC"))
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
@@ -48,6 +55,20 @@ else if (SignInManager.IsSignedIn(User))
         </ul>
     </form>
 
+}
+else if (SignInManager.IsSignedIn(User))
+{
+
+<form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="nav-item">
+            <a class="nav-link text-dark title" asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        <li class="nav-item">
+            <button type="submit" class="btn btn-link navbar-btn navbar-link title">Log out</button>
+        </li>
+    </ul>
+</form>
 
 }
 else

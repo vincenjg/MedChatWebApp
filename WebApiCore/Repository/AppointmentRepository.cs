@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -107,11 +107,11 @@ namespace WebApiCore.Repository
             }
         }
         //get all appointments based on patients
-        public async Task<IEnumerable<Appointment>> GetAllByPatientId(int patientId)
+        public async Task<IEnumerable<Appointment>> GetAllByPatientId(string userId)
         {
             using (IDbConnection conn = Connection)
             {
-                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPatientId", new { PatientId = patientId },
+                var result = await conn.QueryAsync<Appointment>("dbo.spGetAllByPatientId", new { PatientId = userId },
                     commandType: CommandType.StoredProcedure);
                 return result.ToList();
             }
